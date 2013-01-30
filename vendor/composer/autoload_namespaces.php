@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Regulus\\TetraText' => $vendorDir . '/regulus/tetra-text/src/',
     'Regulus\\SolidSite' => $baseDir . '/src/',
     'Illuminate\\Support' => $vendorDir . '/illuminate/support/',
 );
