@@ -10,7 +10,7 @@
 		last updated on January 29, 2013
 ----------------------------------------------------------------------------------------------------------*/
 
-use Aquanode\TetraText\TetraText as Format;
+
 
 class SolidSite {
 
@@ -50,7 +50,7 @@ class SolidSite {
 			$first = true;
 			foreach (static::$trailItems[] as $trailItem) {
 				//if (!$first) $html .= Format::entities('&raquo;');
-				$html .= '<a href="'.URL::to($trailItem->uri).'">'.Format::entities($trailItem->title).'</a>';
+				//$html .= '<a href="'.URL::to($trailItem->uri).'">'.Format::entities($trailItem->title).'</a>';
 				$first = false;
 			}
 			$html .= '</ul>';
