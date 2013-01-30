@@ -49,19 +49,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Regulus343/TetraText",
-                "reference": "7a9462faf219c8fe237fcbe08c385e8c74c3e371"
+                "reference": "71d1c0fc82d8b2cf942f29d4179bf40b73e39004"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/Regulus343/TetraText/archive/7a9462faf219c8fe237fcbe08c385e8c74c3e371.zip",
-                "reference": "7a9462faf219c8fe237fcbe08c385e8c74c3e371",
+                "url": "https://github.com/Regulus343/TetraText/archive/71d1c0fc82d8b2cf942f29d4179bf40b73e39004.zip",
+                "reference": "71d1c0fc82d8b2cf942f29d4179bf40b73e39004",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0",
                 "illuminate/support": "4.0.x"
             },
-            "time": "2013-01-30 04:23:57",
+            "time": "2013-01-30 05:16:23",
             "type": "library",
             "autoload": {
                 "classmap": [

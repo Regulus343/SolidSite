@@ -49,7 +49,7 @@ class SolidSite {
 			$html = '<ul>';
 			$first = true;
 			foreach (static::$trailItems[] as $trailItem) {
-				if (!$first) echo Formatt::entities('&raquo;');
+				//if (!$first) $html .= Format::entities('&raquo;');
 				$html .= '<a href="'.URL::to($trailItem->uri).'">'.Format::entities($trailItem->title).'</a>';
 				$first = false;
 			}
