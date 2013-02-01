@@ -20,54 +20,6 @@ class SolidSite {
 	public static $trailItems = array();
 
 	/**
-	 * Add an item to the breadcrumb trail.
-	 *
-	 * @param  string   $title
-	 * @param  string   $uri
-	 * @return void
-	 */
-	public static function addTrailItem($title = '', $uri = '')
-	{
-		if ($title != "") static::$trailItems[] = (object) array('title'=>$title, 'uri'=>$uri);
-	}
-
-	/**
-	 * Add an item to the breadcrumb trail.
-	 *
-	 * @return array
-	 */
-	public static function getTrailItems()
-	{
-		return static::$trailItems;
-	}
-
-	/**
-	 * Create HTML for breadcrumb trail.
-	 *
-	 * @param  string   $title
-	 * @param  string   $uri
-	 * @return void
-	 */
-	public static function createTrail($id = null)
-	{
-		$html = '';
-		if (is_null($id)) $id = static::get('trailID');
-		if (!empty(static::$trailItems)) {
-			$html = '<ul id="'.$id.'">';
-			$first = true;
-			foreach (static::$trailItems as $trailItem) {
-				$html .= '<li>';
-				if (!$first) $html .= '<span>'.Format::entities(static::get('trailSpacer')).'</span>';
-				$html .= '<a href="'.URL::to($trailItem->uri).'">'.Format::entities($trailItem->title).'</a>';
-				$html .= '</li>';
-				$first = false;
-			}
-			$html .= '</ul>';
-		}
-		return $html;
-	}
-
-	/**
 	 * Get a config item.
 	 *
 	 * @param  string   $item
@@ -143,10 +95,58 @@ class SolidSite {
 	private static function selectedHTML($inClass = false)
 	{
 		if ($inClass) {
-			return ' selected';
+			return ' '.static::get('selectedClass');
 		} else {
-			return ' class="selected"';
+			return ' class="'.static::get('selectedClass').'"';
 		}
+	}
+
+	/**
+	 * Add an item to the breadcrumb trail.
+	 *
+	 * @param  string   $title
+	 * @param  string   $uri
+	 * @return void
+	 */
+	public static function addTrailItem($title = '', $uri = '')
+	{
+		if ($title != "") static::$trailItems[] = (object) array('title'=>$title, 'uri'=>$uri);
+	}
+
+	/**
+	 * Add an item to the breadcrumb trail.
+	 *
+	 * @return array
+	 */
+	public static function getTrailItems()
+	{
+		return static::$trailItems;
+	}
+
+	/**
+	 * Create HTML for breadcrumb trail.
+	 *
+	 * @param  string   $title
+	 * @param  string   $uri
+	 * @return void
+	 */
+	public static function createTrail($id = null)
+	{
+		$html = '';
+		if (is_null($id)) $id = static::get('trailID');
+		if (!empty(static::$trailItems)) {
+			$html = '<ul id="'.$id.'">';
+			$first = true;
+			foreach (static::$trailItems as $trailItem) {
+				$html .= '<li>';
+				if (!$first) $html .= '<span>'.Format::entities(static::get('trailSpacer')).'</span>';
+				$html .= '<a href="'.URL::to($trailItem->uri).'">'.Format::entities($trailItem->title).'</a>';
+				$html .= '</li>';
+				$first = false;
+			}
+			$html .= '</ul>';
+		}
+		return $html;
 	}
 
 }
