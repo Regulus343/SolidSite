@@ -40,7 +40,7 @@ You can use the SolidSite package to store config items that you'd rather not st
 
 **Getting any identifier:**
 
-	Site::get('section')
+	Site::get('section');
 
 **Getting the page title:**
 
