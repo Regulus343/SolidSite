@@ -35,11 +35,25 @@ class SolidSite {
 	 *
 	 * @param  string   $item
 	 * @param  mixed    $value
-	 * @return string
+	 * @return void
 	 */
 	public static function set($item, $value = null)
 	{
 		Config::set('solid-site::'.$item, $value);
+	}
+
+	/**
+	 * Set multiple config items to one particular value.
+	 *
+	 * @param  array    $items
+	 * @param  mixed    $value
+	 * @return void
+	 */
+	public static function setMulti($items = array(), $value = null)
+	{
+		foreach ($items as $item) {
+			static::set($item, $value);
+		}
 	}
 
 	/**
@@ -97,8 +111,7 @@ class SolidSite {
 	 */
 	public static function selectBy($type = 'section', $itemToCompare = '', $inClass = false)
 	{
-
-		return static::selectForMatch(Config::get('solid-site::'.$type), $itemToCompare, $inClass);
+		return static::selectForMatch(static::get($type), $itemToCompare, $inClass);
 	}
 
 	/**

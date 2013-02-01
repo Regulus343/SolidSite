@@ -30,11 +30,10 @@ You may use 'SolidSite', or another alias, but 'Site' is recommended for the sak
 <a name="setting-identifiers"></a>
 ## Setting Sections, Sub Sections, and Titles
 
-**Setting any identifier:**
+**Setting identifiers:**
 
 	Site::set('section', 'Forum');
-	Site::set('subSection', 'Forum: General');
-	Site::set('title', 'Forum: 'Forum: General');
+	Site::setMulti(array('subSection', 'title'), 'Forum: General');
 
 You can use the SolidSite package to store config items that you'd rather not store anywhere else. SolidSite has a few default identifiers including `section`, `subSection`, `title`, and `titleHeading`. These can be used to highlight menu items in a menu, or for anything else that requires a unique page identifier.
 
