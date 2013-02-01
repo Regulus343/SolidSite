@@ -50,7 +50,7 @@ This will return the `title` config item or the `name` config item (the name of 
 
 **Getting the heading title:**
 
-	Site::titleHeading
+	Site::titleHeading();
 
 This will return the `titleHeading` config item or the `title` config item if a heading title is not set. This can be used in cases where you want to make the heading of the page different from what is in the web page's `title` tag.
 
