@@ -7,10 +7,12 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		last updated on January 29, 2013
+		last updated on January 31, 2013
 ----------------------------------------------------------------------------------------------------------*/
 
+use Illuminate\Support\Facades\URL;
 
+use Regulus\TetraText\TetraText as Format;
 
 class SolidSite {
 
@@ -43,14 +45,16 @@ class SolidSite {
 	 * @param  string   $uri
 	 * @return void
 	 */
-	public static function addTrailItem($title = '', $uri = '') {
+	public static function createTrail($title = '', $uri = '') {
 		$html = '';
 		if (!empty(static::$trailItems)) {
-			$html = '<ul>';
+			$html = '<ul id="breadcrumb-trail">';
 			$first = true;
-			foreach (static::$trailItems[] as $trailItem) {
-				//if (!$first) $html .= Format::entities('&raquo;');
-				//$html .= '<a href="'.URL::to($trailItem->uri).'">'.Format::entities($trailItem->title).'</a>';
+			foreach (static::$trailItems as $trailItem) {
+				$html .= '<li>';
+				if (!$first) $html .= '<span>'.Format::entities('&raquo;').'</span>';
+				$html .= '<a href="'.URL::to($trailItem->uri).'">'.Format::entities($trailItem->title).'</a>';
+				$html .= '</li>';
 				$first = false;
 			}
 			$html .= '</ul>';

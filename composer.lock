@@ -1,5 +1,5 @@
 {
-    "hash": "b772b3d7fae7a9e36a92968d81f14a60",
+    "hash": "290d88d3b2166bf09634f716acaaad11",
     "packages": [
         {
             "name": "illuminate/support",
@@ -42,46 +42,6 @@
                 }
             ],
             "description": "Various utilities and support functions."
-        },
-        {
-            "name": "regulus/tetra-text",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Regulus343/TetraText",
-                "reference": "71d1c0fc82d8b2cf942f29d4179bf40b73e39004"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/Regulus343/TetraText/archive/71d1c0fc82d8b2cf942f29d4179bf40b73e39004.zip",
-                "reference": "71d1c0fc82d8b2cf942f29d4179bf40b73e39004",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0",
-                "illuminate/support": "4.0.x"
-            },
-            "time": "2013-01-30 05:16:23",
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/migrations"
-                ],
-                "psr-0": {
-                    "Regulus\\TetraText": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Cody Jassman",
-                    "email": "me@codyjassman.com"
-                }
-            ],
-            "description": "A small text/string formatting composer package that formats phone numbers, numeric values, money values and more."
         }
     ],
     "packages-dev": null,
@@ -89,7 +49,7 @@
 
     ],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "regulus/tetra-text": 20
-    }
+    "stability-flags": [
+
+    ]
 }
