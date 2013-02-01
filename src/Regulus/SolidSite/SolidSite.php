@@ -57,7 +57,7 @@ class SolidSite {
 			$first = true;
 			foreach (static::$trailItems as $trailItem) {
 				$html .= '<li>';
-				if (!$first) $html .= '<span>'.Format::entities(static::get('-trailSpacer')).'</span>';
+				if (!$first) $html .= '<span>'.Format::entities(static::get('trailSpacer')).'</span>';
 				$html .= '<a href="'.URL::to($trailItem->uri).'">'.Format::entities($trailItem->title).'</a>';
 				$html .= '</li>';
 				$first = false;
