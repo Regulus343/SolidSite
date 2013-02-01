@@ -43,6 +43,37 @@ class SolidSite {
 	}
 
 	/**
+	 * Get the title for a web page's title tag.
+	 *
+	 * @param  string   $title
+	 * @return string
+	 */
+	public static function title($title = null)
+	{
+		if (is_null($title)) $title = static::get('title');
+		if (is_null($title) || $title == "") {
+			return Config::get('name');
+		} else {
+			return static::get('name').static::get('titleSeparator').$title;
+		}
+	}
+
+	/**
+	 * Get the heading title. If no specific heading title is set, the regular title is used.
+	 *
+	 * @return string
+	 */
+	public static function titleHeading()
+	{
+		$title = static::get('titleHeading');
+		if (is_null($title) || $title == "") {
+			return Config::get('title');
+		} else {
+			return $title;
+		}
+	}
+
+	/**
 	 * Adds the "selected" class to an HTML element if the first variable matches the second variable.
 	 *
 	 * @param  string   $item
@@ -139,7 +170,7 @@ class SolidSite {
 			$first = true;
 			foreach (static::$trailItems as $trailItem) {
 				$html .= '<li>';
-				if (!$first) $html .= '<span>'.Format::entities(static::get('trailSpacer')).'</span>';
+				if (!$first) $html .= '<span>'.Format::entities(static::get('trailSeparator')).'</span>';
 				$html .= '<a href="'.URL::to($trailItem->uri).'">'.Format::entities($trailItem->title).'</a>';
 				$html .= '</li>';
 				$first = false;

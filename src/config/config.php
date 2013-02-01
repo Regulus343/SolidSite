@@ -2,20 +2,21 @@
 
 return array(
 
-	'name'          => 'Canada Liberty Alliance',
+	'name'            => 'Canada Liberty Alliance',
 
-	'url'           => 'http://libertyalliance.local',
-	'email'         => 'admin@libertyalliance.ca',
+	'url'             => 'http://libertyalliance.local',
+	'email'           => 'admin@libertyalliance.ca',
 
-	'section'       => 'Home',
-	'subSection'    => '',
+	'section'         => 'Home',
+	'subSection'      => '',
 
-	'title'         => '',
-	'titleHeading'  => '',
+	'title'           => '',
+	'titleHeading'    => '',
+	'titleSeparator'  => ' :: ',
 
-	'selectedClass' => 'selected',
+	'selectedClass'   => 'selected',
 
-	'trailID'       => 'breadcrumb-trail',
-	'trailSpacer'   => '»',
+	'trailID'         => 'breadcrumb-trail',
+	'trailSeparator'  => '»',
 
 );
