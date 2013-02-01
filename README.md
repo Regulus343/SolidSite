@@ -46,7 +46,7 @@ You can use the SolidSite package to store config items that you'd rather not st
 
 	Site::title();
 
-This will return the `title` config item or the `name` config item (the name of your website) if a title is not set.
+This will return the `title` config item along with the `name` config item (the name of your website) or just the `name` config item if a title is not set.
 
 **Getting the heading title:**
 
