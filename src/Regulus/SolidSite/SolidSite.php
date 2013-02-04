@@ -57,6 +57,16 @@ class SolidSite {
 	}
 
 	/**
+	 * Get the website name.
+	 *
+	 * @return string
+	 */
+	public static function name()
+	{
+		return static::get('name');
+	}
+
+	/**
 	 * Get the title for a web page's title tag.
 	 *
 	 * @param  string   $title
@@ -66,7 +76,7 @@ class SolidSite {
 	{
 		if (is_null($title)) $title = static::get('title');
 		if (is_null($title) || $title == "") {
-			return Config::get('name');
+			return static::get('name');
 		} else {
 			return static::get('name').static::get('titleSeparator').$title;
 		}
@@ -81,7 +91,7 @@ class SolidSite {
 	{
 		$title = static::get('titleHeading');
 		if (is_null($title) || $title == "") {
-			return Config::get('title');
+			return static::get('title');
 		} else {
 			return $title;
 		}
