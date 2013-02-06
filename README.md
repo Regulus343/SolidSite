@@ -11,7 +11,7 @@ A composer package that assigns section name and titles to controller functions 
 <a name="installation"></a>
 ## Installation
 
-To install SolidSite, make sure "regulus/solid-site" has been added to Laravel 4's config.json file.
+To install SolidSite, make sure "regulus/solid-site" has been added to Laravel 4's `composer.json` file.
 
 	"require": {
 		"regulus/solid-site": "dev-master"

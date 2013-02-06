@@ -78,7 +78,11 @@ class SolidSite {
 		if (is_null($title) || $title == "") {
 			return static::get('name');
 		} else {
-			return static::get('name').static::get('titleSeparator').$title;
+			if (static::get('titleNameInFront')) {
+				return static::get('name').static::get('titleSeparator').$title;
+			} else {
+				return $title.static::get('titleSeparator').static::get('name');
+			}
 		}
 	}
 
