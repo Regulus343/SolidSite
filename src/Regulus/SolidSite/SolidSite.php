@@ -7,7 +7,7 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		last updated on January 31, 2013
+		last updated on February 19, 2013
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -153,7 +153,7 @@ class SolidSite {
 		foreach ($comparisonData as $item => $itemToCompare) {
 			if ($item != $itemToCompare) return '';
 		}
-		return static::selectedHTML($inClass);
+		return static::selectedHtml($inClass);
 	}
 
 	/**
@@ -163,7 +163,7 @@ class SolidSite {
 	 * @param  boolean  $inClass
 	 * @return string
 	 */
-	private static function selectedHTML($inClass = false)
+	private static function selectedHtml($inClass = false)
 	{
 		if ($inClass) {
 			return ' '.static::get('selectedClass');
