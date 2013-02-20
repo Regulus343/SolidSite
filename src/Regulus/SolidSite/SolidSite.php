@@ -102,6 +102,19 @@ class SolidSite {
 	}
 
 	/**
+	 * Create a URL from websites root URL defined in config. This can be useful when using subdomains
+	 * because URL::to() will create a URL with the current subdomain instead of the website's root.
+	 *
+	 * @return string
+	 */
+	public static function rootUrl($uri = '', $secure = false) {
+		$url = static::get('url');
+		if ($secure) $url = str_replace('http://', 'https://', $url);
+		if ($uri != "") $url .= '/'.$uri;
+		return $url;
+	}
+
+	/**
 	 * Adds the "selected" class to an HTML element if the first variable matches the second variable.
 	 *
 	 * @param  string   $item
