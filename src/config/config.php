@@ -2,10 +2,10 @@
 
 return array(
 
-	'name'             => 'Canada Liberty Alliance',
+	'name'             => 'Website Name',
 
-	'url'              => 'http://libertyalliance.local',
-	'email'            => 'admin@libertyalliance.ca',
+	'url'              => 'http://localhost',
+	'email'            => 'admin@localhost',
 
 	'section'          => 'Home',
 	'subSection'       => '',
