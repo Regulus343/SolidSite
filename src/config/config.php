@@ -11,6 +11,7 @@ return array(
 	'imgUri'           => 'img',     //will be added to the end of assetsUri
 	'cssUri'           => 'css',     //will be added to the end of assetsUri
 	'jsUri'            => 'js',      //will be added to the end of assetsUri
+	'uploadsUri'       => 'uploads',
 
 	'section'          => 'Home',
 	'subSection'       => '',

@@ -115,7 +115,7 @@ class SolidSite {
 	}
 
 	/**
-	 * Create a URL for assets directory.
+	 * Create a URL for an asset.
 	 *
 	 * @return string
 	 */
@@ -124,7 +124,7 @@ class SolidSite {
 	}
 
 	/**
-	 * Create a URL for images directory.
+	 * Create a URL for an image.
 	 *
 	 * @return string
 	 */
@@ -133,7 +133,7 @@ class SolidSite {
 	}
 
 	/**
-	 * Create a URL for CSS directory.
+	 * Create a URL for a CSS file.
 	 *
 	 * @return string
 	 */
@@ -142,12 +142,21 @@ class SolidSite {
 	}
 
 	/**
-	 * Create a URL for JavaScript directory.
+	 * Create a URL for a JavaScript file.
 	 *
 	 * @return string
 	 */
 	public static function js($path = '') {
 		return URL::to(static::get('assetsUri').'/'.static::get('jsUri').'/'.$path);
+	}
+
+	/**
+	 * Create a URL for an uploaded file.
+	 *
+	 * @return string
+	 */
+	public static function uploadedFile($path = '') {
+		return URL::to(static::get('uploadsUri').'/'.$path);
 	}
 
 	/**

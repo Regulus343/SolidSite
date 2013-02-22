@@ -6,6 +6,7 @@ A composer package that assigns section name and titles to controller functions 
 - [Installation](#installation)
 - [Setting Sections, Sub Sections, and Titles](#setting-identifiers)
 - [Highlighting Menu Items Based on Section and Sub Section](#highlighting-menu-items)
+- [Asset URLs](#asset-urls)
 - [Creating a Breadcrumb Trail](#creating-breadcrumb-trail)
 
 <a name="installation"></a>
@@ -86,6 +87,31 @@ SolidSite has a few methods for the purpose of highlighting menu items (adding a
 	</ul>
 
 If successful, a class will be added to the menu list item. The default class is "selected", but this can be adjusted in the config file.
+
+<a name="asset-urls"></a>
+## Asset URLs
+
+**Create an asset URL that uses the directory specified in `config.php`:**
+
+	echo Site::asset('js/jquery.js');
+
+**Create an image asset URL:**
+
+	echo Site::img('logo.png');
+
+**Create a CSS asset URL:**
+
+	echo Site::css('styles.css');
+
+**Create a JavaScript asset URL:**
+
+	echo Site::js('jquery.js');
+
+**Create an uploaded file URL:**
+
+	echo Site::uploadedFile('user_images/1.png');
+
+The asset URLs methods should help to shorten markup and make your views cleaner. You can customize the directories for each of the asset types in `config.php` according to your preferences.
 
 <a name="creating-breadcrumb-trail"></a>
 ## Creating a Breadcrumb Trail
