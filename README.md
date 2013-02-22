@@ -113,6 +113,14 @@ If successful, a class will be added to the menu list item. The default class is
 
 The asset URLs methods should help to shorten markup and make your views cleaner. You can customize the directories for each of the asset types in `config.php` according to your preferences.
 
+For `img()`, `css()`, and `js()`, you are not required to add an extension. For the image method, `.png` will be the assumed extension if you leave it out:
+
+	echo Site::img('logo');   //automatically adds ".png"
+
+	echo Site::css('styles'); //automatically adds ".css"
+
+	echo Site::js('jquery');  //automatically adds ".js"
+
 <a name="creating-breadcrumb-trail"></a>
 ## Creating a Breadcrumb Trail
 

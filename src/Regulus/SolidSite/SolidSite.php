@@ -11,6 +11,7 @@
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\URL;
 
 use Regulus\TetraText\TetraText as Format;
@@ -105,6 +106,8 @@ class SolidSite {
 	 * Create a URL from websites root URL defined in config. This can be useful when using subdomains
 	 * because URL::to() will create a URL with the current subdomain instead of the website's root.
 	 *
+	 * @param  string   $uri
+	 * @param  string   $secure
 	 * @return string
 	 */
 	public static function rootUrl($uri = '', $secure = false) {
@@ -117,36 +120,54 @@ class SolidSite {
 	/**
 	 * Create a URL for an asset.
 	 *
+	 * @param  string   $uri
+	 * @param  string   $secure
 	 * @return string
 	 */
-	public static function asset($path = '') {
-		return URL::to(static::get('assetsUri').'/'.$path);
+	public static function asset($path = '', $secure = false) {
+		return static::rootUrl(static::get('assetsUri').'/'.$path, $secure);
 	}
 
 	/**
 	 * Create a URL for an image.
 	 *
+	 * @param  string   $uri
+	 * @param  string   $addExtension
 	 * @return string
 	 */
-	public static function img($path = '') {
+	public static function img($path = '', $addExtension = true) {
+		//if no extension is given, assume .png
+		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif'))) {
+			$path .= ".png";
+		}
 		return URL::to(static::get('assetsUri').'/'.static::get('imgUri').'/'.$path);
 	}
 
 	/**
 	 * Create a URL for a CSS file.
 	 *
+	 * @param  string   $uri
+	 * @param  string   $addExtension
 	 * @return string
 	 */
-	public static function css($path = '') {
+	public static function css($path = '', $addExtension = true) {
+		//add .css extension if one doesn't exist
+		if ($path != "" && File::extension($path) != "css") $path .= ".css";
+
 		return URL::to(static::get('assetsUri').'/'.static::get('cssUri').'/'.$path);
 	}
 
 	/**
 	 * Create a URL for a JavaScript file.
 	 *
+	 * @param  string   $uri
+	 * @param  string   $addExtension
 	 * @return string
 	 */
-	public static function js($path = '') {
+	public static function js($path = '', $addExtension = true) {
+		//add .js extension if one doesn't exist
+		if ($path != "" && File::extension($path) != "js") $path .= ".js";
+
 		return URL::to(static::get('assetsUri').'/'.static::get('jsUri').'/'.$path);
 	}
 
