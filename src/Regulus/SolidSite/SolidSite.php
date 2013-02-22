@@ -115,6 +115,42 @@ class SolidSite {
 	}
 
 	/**
+	 * Create a URL for assets directory.
+	 *
+	 * @return string
+	 */
+	public static function asset($path = '') {
+		return URL::to(static::get('assetsUri').'/'.$path);
+	}
+
+	/**
+	 * Create a URL for images directory.
+	 *
+	 * @return string
+	 */
+	public static function img($path = '') {
+		return URL::to(static::get('assetsUri').'/'.static::get('imgUri').'/'.$path);
+	}
+
+	/**
+	 * Create a URL for CSS directory.
+	 *
+	 * @return string
+	 */
+	public static function css($path = '') {
+		return URL::to(static::get('assetsUri').'/'.static::get('cssUri').'/'.$path);
+	}
+
+	/**
+	 * Create a URL for JavaScript directory.
+	 *
+	 * @return string
+	 */
+	public static function js($path = '') {
+		return URL::to(static::get('assetsUri').'/'.static::get('jsUri').'/'.$path);
+	}
+
+	/**
 	 * Adds the "selected" class to an HTML element if the first variable matches the second variable.
 	 *
 	 * @param  string   $item
