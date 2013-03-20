@@ -120,64 +120,81 @@ class SolidSite {
 	/**
 	 * Create a URL for an asset.
 	 *
-	 * @param  string   $uri
-	 * @param  string   $secure
+	 * @param  string   $path
+	 * @param  boolean  $secure
+	 * @param  mixed    $package
 	 * @return string
 	 */
-	public static function asset($path = '', $secure = false) {
-		return static::rootUrl(static::get('assetsUri').'/'.$path, $secure);
+	public static function asset($path = '', $secure = false, $package = false) {
+		$path = static::get('assetsUri').'/'.$path;
+		if ($package) $path = 'packages/'.$package.'/'.$path;
+
+		return static::rootUrl($path, $secure);
 	}
 
 	/**
 	 * Create a URL for an image.
 	 *
-	 * @param  string   $uri
+	 * @param  string   $path
+	 * @param  mixed    $package
 	 * @param  string   $addExtension
 	 * @return string
 	 */
-	public static function img($path = '', $addExtension = true) {
+	public static function img($path = '', $package = false, $addExtension = true) {
 		//if no extension is given, assume .png
 		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif'))) {
 			$path .= ".png";
 		}
-		return URL::to(static::get('assetsUri').'/'.static::get('imgUri').'/'.$path);
+		$path = static::get('assetsUri').'/'.static::get('imgUri').'/'.$path;
+		if ($package) $path = 'packages/'.$package.'/'.$path;
+
+		return static::rootUrl($path);
 	}
 
 	/**
 	 * Create a URL for a CSS file.
 	 *
-	 * @param  string   $uri
+	 * @param  string   $path
+	 * @param  mixed    $package
 	 * @param  string   $addExtension
 	 * @return string
 	 */
-	public static function css($path = '', $addExtension = true) {
+	public static function css($path = '', $package = false, $addExtension = true) {
 		//add .css extension if one doesn't exist
 		if ($path != "" && File::extension($path) != "css") $path .= ".css";
 
-		return URL::to(static::get('assetsUri').'/'.static::get('cssUri').'/'.$path);
+		$path = static::get('assetsUri').'/'.static::get('cssUri').'/'.$path;
+		if ($package) $path = 'packages/'.$package.'/'.$path;
+
+		return static::rootUrl($path);
 	}
 
 	/**
 	 * Create a URL for a JavaScript file.
 	 *
-	 * @param  string   $uri
+	 * @param  string   $path
+	 * @param  mixed    $package
 	 * @param  string   $addExtension
 	 * @return string
 	 */
-	public static function js($path = '', $addExtension = true) {
+	public static function js($path = '', $package = false, $addExtension = true) {
 		//add .js extension if one doesn't exist
 		if ($path != "" && File::extension($path) != "js") $path .= ".js";
 
-		return URL::to(static::get('assetsUri').'/'.static::get('jsUri').'/'.$path);
+		$path = static::get('assetsUri').'/'.static::get('jsUri').'/'.$path;
+		if ($package) $path = 'packages/'.$package.'/'.$path;
+
+		return static::rootUrl($path);
 	}
 
 	/**
 	 * Create a URL for an uploaded file.
 	 *
+	 * @param  string   $path
 	 * @return string
 	 */
 	public static function uploadedFile($path = '') {
-		return URL::to(static::get('uploadsUri').'/'.$path);
+		return static::rootUrl(static::get('uploadsUri').'/'.$path);
 	}
 
 	/**
