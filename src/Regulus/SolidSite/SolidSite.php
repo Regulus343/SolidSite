@@ -234,7 +234,7 @@ class SolidSite {
 	public static function selectByMulti($comparisonData = array(), $inClass = false)
 	{
 		foreach ($comparisonData as $item => $itemToCompare) {
-			if ($item != $itemToCompare) return '';
+			if (static::get($item) != $itemToCompare) return '';
 		}
 		return static::selectedHtml($inClass);
 	}
