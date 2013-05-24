@@ -7,11 +7,11 @@ return array(
 	'url'              => 'http://localhost',
 	'email'            => 'admin@localhost',
 
-	'assetsUri'        => 'assets',
-	'imgUri'           => 'img',     //will be added to the end of assetsUri
-	'cssUri'           => 'css',     //will be added to the end of assetsUri
-	'jsUri'            => 'js',      //will be added to the end of assetsUri
-	'uploadsUri'       => 'uploads',
+	'assetsURI'        => 'assets',
+	'imgURI'           => 'img',     //will be added to the end of assetsUri
+	'cssURI'           => 'css',     //will be added to the end of assetsUri
+	'jsURI'            => 'js',      //will be added to the end of assetsUri
+	'uploadsURI'       => 'uploads',
 
 	'section'          => 'Home',
 	'subSection'       => '',

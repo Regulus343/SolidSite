@@ -126,7 +126,7 @@ class SolidSite {
 	 * @return string
 	 */
 	public static function asset($path = '', $secure = false, $package = false) {
-		$path = static::get('assetsUri').'/'.$path;
+		$path = static::get('assetsURI').'/'.$path;
 		if ($package) $path = 'packages/'.$package.'/'.$path;
 
 		return static::rootUrl($path, $secure);
@@ -145,7 +145,7 @@ class SolidSite {
 		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif'))) {
 			$path .= ".png";
 		}
-		$path = static::get('assetsUri').'/'.static::get('imgUri').'/'.$path;
+		$path = static::get('assetsURI').'/'.static::get('imgURI').'/'.$path;
 		if ($package) $path = 'packages/'.$package.'/'.$path;
 
 		return static::rootUrl($path);
@@ -163,7 +163,7 @@ class SolidSite {
 		//add .css extension if one doesn't exist
 		if ($path != "" && File::extension($path) != "css") $path .= ".css";
 
-		$path = static::get('assetsUri').'/'.static::get('cssUri').'/'.$path;
+		$path = static::get('assetsURI').'/'.static::get('cssURI').'/'.$path;
 		if ($package) $path = 'packages/'.$package.'/'.$path;
 
 		return static::rootUrl($path);
@@ -181,7 +181,7 @@ class SolidSite {
 		//add .js extension if one doesn't exist
 		if ($path != "" && File::extension($path) != "js") $path .= ".js";
 
-		$path = static::get('assetsUri').'/'.static::get('jsUri').'/'.$path;
+		$path = static::get('assetsURI').'/'.static::get('jsURI').'/'.$path;
 		if ($package) $path = 'packages/'.$package.'/'.$path;
 
 		return static::rootUrl($path);
@@ -194,7 +194,7 @@ class SolidSite {
 	 * @return string
 	 */
 	public static function uploadedFile($path = '') {
-		return static::rootUrl(static::get('uploadsUri').'/'.$path);
+		return static::rootUrl(static::get('uploadsURI').'/'.$path);
 	}
 
 	/**
@@ -264,7 +264,7 @@ class SolidSite {
 	 */
 	public static function addTrailItem($title = '', $uri = '')
 	{
-		if ($title != "") static::$trailItems[] = (object) array('title'=>$title, 'uri'=>$uri);
+		if ($title != "") static::$trailItems[] = (object) array('title' => $title, 'uri' => $uri);
 	}
 
 	/**

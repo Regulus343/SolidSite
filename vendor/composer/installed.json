@@ -7,12 +7,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/support.git",
-            "reference": "f30bce49f7dc8e57684ac079f94cea70f3eb47f5"
+            "reference": "3416ba8aa0ceb44e80a2c53d51c8eac11716b3eb"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/support/zipball/f30bce49f7dc8e57684ac079f94cea70f3eb47f5",
-            "reference": "f30bce49f7dc8e57684ac079f94cea70f3eb47f5",
+            "url": "https://api.github.com/repos/illuminate/support/zipball/3416ba8aa0ceb44e80a2c53d51c8eac11716b3eb",
+            "reference": "3416ba8aa0ceb44e80a2c53d51c8eac11716b3eb",
             "shasum": ""
         },
         "require": {
@@ -20,10 +20,10 @@
         },
         "require-dev": {
             "mockery/mockery": "0.7.2",
-            "patchwork/utf8": "1.0.*",
+            "patchwork/utf8": "1.1.*",
             "phpunit/phpunit": "3.7.*"
         },
-        "time": "2013-03-29 21:32:25",
+        "time": "2013-05-12 01:10:00",
         "type": "library",
         "extra": {
             "branch-alias": {
