@@ -7,7 +7,7 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		last updated on March 20, 2013
+		last updated on May 23, 2013
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -110,7 +110,7 @@ class SolidSite {
 	 * @param  string   $secure
 	 * @return string
 	 */
-	public static function rootUrl($uri = '', $secure = false) {
+	public static function rootURL($uri = '', $secure = false) {
 		$url = static::get('url');
 		if ($secure) $url = str_replace('http://', 'https://', $url);
 		if ($uri != "") $url .= '/'.$uri;
@@ -129,7 +129,7 @@ class SolidSite {
 		$path = static::get('assetsURI').'/'.$path;
 		if ($package) $path = 'packages/'.$package.'/'.$path;
 
-		return static::rootUrl($path, $secure);
+		return static::rootURL($path, $secure);
 	}
 
 	/**
@@ -148,7 +148,7 @@ class SolidSite {
 		$path = static::get('assetsURI').'/'.static::get('imgURI').'/'.$path;
 		if ($package) $path = 'packages/'.$package.'/'.$path;
 
-		return static::rootUrl($path);
+		return static::rootURL($path);
 	}
 
 	/**
@@ -166,7 +166,7 @@ class SolidSite {
 		$path = static::get('assetsURI').'/'.static::get('cssURI').'/'.$path;
 		if ($package) $path = 'packages/'.$package.'/'.$path;
 
-		return static::rootUrl($path);
+		return static::rootURL($path);
 	}
 
 	/**
@@ -184,7 +184,7 @@ class SolidSite {
 		$path = static::get('assetsURI').'/'.static::get('jsURI').'/'.$path;
 		if ($package) $path = 'packages/'.$package.'/'.$path;
 
-		return static::rootUrl($path);
+		return static::rootURL($path);
 	}
 
 	/**
@@ -194,7 +194,7 @@ class SolidSite {
 	 * @return string
 	 */
 	public static function uploadedFile($path = '') {
-		return static::rootUrl(static::get('uploadsURI').'/'.$path);
+		return static::rootURL(static::get('uploadsURI').'/'.$path);
 	}
 
 	/**
