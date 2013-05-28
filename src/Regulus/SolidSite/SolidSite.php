@@ -76,6 +76,7 @@ class SolidSite {
 	public static function title($title = null)
 	{
 		if (is_null($title)) $title = static::get('title');
+		$title = strip_tags($title);
 		if (is_null($title) || $title == "") {
 			return static::get('name');
 		} else {
