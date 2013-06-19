@@ -82,11 +82,11 @@ SolidSite has a few methods for the purpose of highlighting menu items (adding a
 				</li>
 			</ul>
 		</li>
-		<li<?php echo Site::selectBy('section', 'FAQ'); ?>><a href="#">FAQ</a></li>
-		<li<?php echo Site::selectBy('section', 'Contact'); ?>><a href="#">Contact</a></li>
+		<li<?php echo Site::selectBy('section', 'FAQ', false, 'active'); ?>><a href="#">FAQ</a></li>
+		<li class="some-class<?php echo Site::selectBy('section', 'Contact', true); ?>"><a href="#">Contact</a></li>
 	</ul>
 
-If successful, a class will be added to the menu list item. The default class is "selected", but this can be adjusted in the config file.
+If successful, a class will be added to the menu list item. The default class is "selected", but this can be adjusted in the config file or as the fourth argument in the `selectBy()` and `selectByMulti()` methods. The third class is a boolean that denotes whether the returned markup should be the entire class declaration or if it should just return the name of the class (with a preceding space) in case you want to add the class to an existing class declaration in your HTML.
 
 <a name="asset-urls"></a>
 ## Asset URLs

@@ -7,7 +7,7 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		last updated on May 27, 2013
+		last updated on June 12, 2013
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -204,11 +204,12 @@ class SolidSite {
 	 * @param  string   $item
 	 * @param  string   $itemToCompare
 	 * @param  boolean  $inClass
+	 * @param  mixed    $className
 	 * @return string
 	 */
-	public static function selectForMatch($item, $itemToCompare, $inClass = false)
+	public static function selectForMatch($item, $itemToCompare, $inClass = false, $className = false)
 	{
-		if ($item == $itemToCompare) return static::selectedHTML($inClass);
+		if ($item == $itemToCompare) return static::selectedHTML($inClass, $className);
 		return '';
 	}
 
@@ -218,11 +219,12 @@ class SolidSite {
 	 * @param  string   $item
 	 * @param  string   $itemToCompare
 	 * @param  boolean  $inClass
+	 * @param  mixed    $className
 	 * @return string
 	 */
-	public static function selectBy($type = 'section', $itemToCompare = '', $inClass = false)
+	public static function selectBy($type = 'section', $itemToCompare = '', $inClass = false, $className = false)
 	{
-		return static::selectForMatch(static::get($type), $itemToCompare, $inClass);
+		return static::selectForMatch(static::get($type), $itemToCompare, $inClass, $className);
 	}
 
 	/**
@@ -230,14 +232,15 @@ class SolidSite {
 	 *
 	 * @param  array    $comparisonData
 	 * @param  boolean  $inClass
+	 * @param  mixed    $className
 	 * @return string
 	 */
-	public static function selectByMulti($comparisonData = array(), $inClass = false)
+	public static function selectByMulti($comparisonData = array(), $inClass = false, $className = false)
 	{
 		foreach ($comparisonData as $item => $itemToCompare) {
 			if (static::get($item) != $itemToCompare) return '';
 		}
-		return static::selectedHtml($inClass);
+		return static::selectedHTML($inClass, $className);
 	}
 
 	/**
@@ -245,14 +248,17 @@ class SolidSite {
 	 *
 	 * @param  array    $comparisonData
 	 * @param  boolean  $inClass
+	 * @param  mixed    $className
 	 * @return string
 	 */
-	private static function selectedHtml($inClass = false)
+	private static function selectedHTML($inClass = false, $className = false)
 	{
+		if (!$className || !is_string($className) || $className == "") $className = static::get('selectedClass');
+
 		if ($inClass) {
-			return ' '.static::get('selectedClass');
+			return ' '.$className;
 		} else {
-			return ' class="'.static::get('selectedClass').'"';
+			return ' class="'.$className.'"';
 		}
 	}
 
