@@ -2,27 +2,93 @@
 
 return array(
 
+	/*
+	|--------------------------------------------------------------------------
+	| Website Name, Base URL, and Webmaster Email
+	|--------------------------------------------------------------------------
+	|
+	| The location of your ratings views. It is defaulted to "open-ratings::"
+	| to use OpenForum's built-in views, but you may point it towards a views
+	| directory of your own for full view customization.
+	|
+	*/
 	'name'             => 'Website Name',
-
 	'url'              => 'http://localhost',
 	'email'            => 'admin@localhost',
 
+	/*
+	|--------------------------------------------------------------------------
+	| Assets, Image, CSS, JS, and Uploads Paths
+	|--------------------------------------------------------------------------
+	|
+	| The URI variables can be used to easily load assets using Site::asset(),
+	| Site::img(), Site::css(), Site::js(), and Site::uploadedFile() to create
+	| URLS for your assets. "imgURI", "cssURI", "jsURI", and "uploadsURI" will
+	| be appended to the end of "assetsURI", so by default
+	| Site::img('image-name') would create a URL of
+	| http:://website.com/assets/img/image-name.png ("png" being the assumed
+	| extension if one is not explicitly specified.
+	|
+	*/
 	'assetsURI'        => 'assets',
-	'imgURI'           => 'img',     //will be added to the end of assetsUri
-	'cssURI'           => 'css',     //will be added to the end of assetsUri
-	'jsURI'            => 'js',      //will be added to the end of assetsUri
+	'imgURI'           => 'img',
+	'cssURI'           => 'css',
+	'jsURI'            => 'js',
 	'uploadsURI'       => 'uploads',
 
+	/*
+	|--------------------------------------------------------------------------
+	| Section and Sub Section
+	|--------------------------------------------------------------------------
+	|
+	| These are used to specify the section and sub section (if necessary) of
+	| the website that the user is at. This can help to select active menu
+	| elements, especially when used in conjunction with Site::selectBy().
+	|
+	*/
 	'section'          => 'Home',
 	'subSection'       => '',
 
+	/*
+	|--------------------------------------------------------------------------
+	| Title
+	|--------------------------------------------------------------------------
+	|
+	| "title" and "titleHeading" are used to set and display titles. "title"
+	| can be used with Site::title() to set a webpage's title within HTML
+	| title tags. "titleHeading" can be set if the heading on the page needs to
+	| differ from the title of the web page. The Site::titleHeading() method
+	| will use "title" unless "titleHeading" is set. "titleSeparator" can be
+	| used to separate the website name from the page title. If
+	| "titleNameInFront" is true, the website name will appear in front of the
+	| page title. By default, it is false so Site::title() will place the page
+	| title in front of the website name.
+	|
+	*/
 	'title'            => '',
 	'titleHeading'     => '',
 	'titleSeparator'   => ' :: ',
 	'titleNameInFront' => false,
 
+	/*
+	|--------------------------------------------------------------------------
+	| Selected Class
+	|--------------------------------------------------------------------------
+	|
+	| The name of the "selected" class for Site::selectBy() and
+	| Site::selectByMulti().
+	|
+	*/
 	'selectedClass'    => 'selected',
 
+	/*
+	|--------------------------------------------------------------------------
+	| Breadcrumb Trail
+	|--------------------------------------------------------------------------
+	|
+	| The ID and the separator symbol for breadcrumb trails.
+	|
+	*/
 	'trailID'          => 'breadcrumb-trail',
 	'trailSeparator'   => '»',
 
