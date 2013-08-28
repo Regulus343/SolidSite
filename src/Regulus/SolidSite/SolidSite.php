@@ -7,7 +7,7 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		last updated on August 21, 2013
+		last updated on August 27, 2013
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -127,8 +127,11 @@ class SolidSite {
 	 * @return string
 	 */
 	public static function asset($path = '', $secure = false, $package = false) {
-		$path = static::get('assetsURI').'/'.$path;
-		if ($package) $path = 'packages/'.$package.'/'.$path;
+		if ($package) {
+			$path = 'packages/'.$package.'/'.$path;
+		} else {
+			$path = static::get('assetsURI').'/'.$path;
+		}
 
 		return static::rootURL($path, $secure);
 	}
@@ -146,8 +149,12 @@ class SolidSite {
 		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif'))) {
 			$path .= ".png";
 		}
-		$path = static::get('assetsURI').'/'.static::get('imgURI').'/'.$path;
-		if ($package) $path = 'packages/'.$package.'/'.$path;
+		$path = static::get('imgURI').'/'.$path;
+		if ($package) {
+			$path = 'packages/'.$package.'/'.$path;
+		} else {
+			$path = static::get('assetsURI').'/'.$path;
+		}
 
 		return static::rootURL($path);
 	}
@@ -164,8 +171,12 @@ class SolidSite {
 		//add .css extension if one doesn't exist
 		if ($path != "" && File::extension($path) != "css") $path .= ".css";
 
-		$path = static::get('assetsURI').'/'.static::get('cssURI').'/'.$path;
-		if ($package) $path = 'packages/'.$package.'/'.$path;
+		$path = static::get('cssURI').'/'.$path;
+		if ($package) {
+			$path = 'packages/'.$package.'/'.$path;
+		} else {
+			$path = static::get('assetsURI').'/'.$path;
+		}
 
 		return static::rootURL($path);
 	}
@@ -182,8 +193,12 @@ class SolidSite {
 		//add .js extension if one doesn't exist
 		if ($path != "" && File::extension($path) != "js") $path .= ".js";
 
-		$path = static::get('assetsURI').'/'.static::get('jsURI').'/'.$path;
-		if ($package) $path = 'packages/'.$package.'/'.$path;
+		$path = static::get('jsURI').'/'.$path;
+		if ($package) {
+			$path = 'packages/'.$package.'/'.$path;
+		} else {
+			$path = static::get('assetsURI').'/'.$path;
+		}
 
 		return static::rootURL($path);
 	}
