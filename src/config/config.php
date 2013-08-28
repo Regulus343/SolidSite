@@ -7,9 +7,7 @@ return array(
 	| Website Name, Base URL, and Webmaster Email
 	|--------------------------------------------------------------------------
 	|
-	| The location of your ratings views. It is defaulted to "open-ratings::"
-	| to use OpenForum's built-in views, but you may point it towards a views
-	| directory of your own for full view customization.
+	| The name, URL, and webmaster email address for the website.
 	|
 	*/
 	'name'             => 'Website Name',
