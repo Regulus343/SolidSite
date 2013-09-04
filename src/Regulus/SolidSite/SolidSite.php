@@ -7,17 +7,21 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		last updated on August 27, 2013
+		last updated on September 3, 2013
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
 use Regulus\TetraText\TetraText as Format;
 
 class SolidSite {
 
+	/**
+	 * @var    array
+	 */
 	public static $trailItems = array();
 
 	/**
@@ -96,11 +100,13 @@ class SolidSite {
 	public static function titleHeading()
 	{
 		$title = static::get('titleHeading');
-		if (is_null($title) || $title == "") {
-			return static::get('title');
-		} else {
-			return $title;
-		}
+		if (is_null($title) || $title == "")
+			$title = static::get('title');
+
+		if (strip_tags($title) == $title)
+			$title = Format::entities($title);
+
+		return $title;
 	}
 
 	/**
@@ -331,6 +337,27 @@ class SolidSite {
 			$html .= '</ul>';
 		}
 		return $html;
+	}
+
+	/**
+	 * Set the user to "developer" status.
+	 *
+	 * @return boolean
+	 */
+	public static function setDeveloper()
+	{
+		Session::set('developer', true);
+	}
+
+	/**
+	 * Get the user's "developer" status based on session variable.
+	 *
+	 * @return boolean
+	 */
+	public static function developer()
+	{
+		$developer = Session::get('developer');
+		return !is_null($developer) && $developer ? true : false;
 	}
 
 }
