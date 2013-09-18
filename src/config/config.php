@@ -4,15 +4,14 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
-	| Website Name, Base URL, and Webmaster Email
+	| Website Name and Webmaster Email
 	|--------------------------------------------------------------------------
 	|
-	| The name, URL, and webmaster email address for the website.
+	| The name and webmaster email address for the website.
 	|
 	*/
-	'name'             => 'Website Name',
-	'url'              => 'http://localhost',
-	'email'            => 'admin@localhost',
+	'name'  => 'Website Name',
+	'email' => 'admin@localhost',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -28,11 +27,11 @@ return array(
 	| extension if one is not explicitly specified.
 	|
 	*/
-	'assetsURI'        => 'assets',
-	'imgURI'           => 'img',
-	'cssURI'           => 'css',
-	'jsURI'            => 'js',
-	'uploadsURI'       => 'uploads',
+	'assetsURI'  => 'assets',
+	'imgURI'     => 'img',
+	'cssURI'     => 'css',
+	'jsURI'      => 'js',
+	'uploadsURI' => 'uploads',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -44,8 +43,8 @@ return array(
 	| elements, especially when used in conjunction with Site::selectBy().
 	|
 	*/
-	'section'          => 'Home',
-	'subSection'       => '',
+	'section'    => 'Home',
+	'subSection' => '',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -77,7 +76,7 @@ return array(
 	| Site::selectByMulti().
 	|
 	*/
-	'selectedClass'    => 'selected',
+	'selectedClass' => 'selected',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -87,7 +86,7 @@ return array(
 	| The ID and the separator symbol for breadcrumb trails.
 	|
 	*/
-	'trailID'          => 'breadcrumb-trail',
-	'trailSeparator'   => '»',
+	'trailID'        => 'breadcrumb-trail',
+	'trailSeparator' => '»',
 
 );

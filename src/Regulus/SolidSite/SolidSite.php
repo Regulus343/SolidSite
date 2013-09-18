@@ -7,7 +7,7 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		last updated on September 3, 2013
+		last updated on September 17, 2013
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -84,6 +84,7 @@ class SolidSite {
 		if (is_null($title) || $title == "") {
 			return static::get('name');
 		} else {
+			//var_dump(Config::get('solid-site::titleSeparator')); exit;
 			if (static::get('titleNameInFront')) {
 				return static::get('name').static::get('titleSeparator').$title;
 			} else {
@@ -100,8 +101,11 @@ class SolidSite {
 	public static function titleHeading()
 	{
 		$title = static::get('titleHeading');
-		if (is_null($title) || $title == "")
+		if (is_null($title) || $title == "" || !is_string($title))
 			$title = static::get('title');
+
+		if (!is_string($title))
+			$title = "";
 
 		if (strip_tags($title) == $title)
 			$title = Format::entities($title);
@@ -118,7 +122,7 @@ class SolidSite {
 	 * @return string
 	 */
 	public static function rootURL($uri = '', $secure = false) {
-		$url = static::get('url');
+		$url = Config::get('app.url');
 		if ($secure) $url = str_replace('http://', 'https://', $url);
 		if ($uri != "") $url .= '/'.$uri;
 		return $url;
