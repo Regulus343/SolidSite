@@ -27,11 +27,11 @@ return array(
 	| extension if one is not explicitly specified.
 	|
 	*/
-	'assetsURI'  => 'assets',
-	'imgURI'     => 'img',
-	'cssURI'     => 'css',
-	'jsURI'      => 'js',
-	'uploadsURI' => 'uploads',
+	'assetsUri'  => 'assets',
+	'imgUri'     => 'images',
+	'cssUri'     => 'css',
+	'jsUri'      => 'js',
+	'uploadsUri' => 'uploads',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -86,7 +86,7 @@ return array(
 	| The ID and the separator symbol for breadcrumb trails.
 	|
 	*/
-	'trailID'        => 'breadcrumb-trail',
+	'trailId'        => 'breadcrumb-trail',
 	'trailSeparator' => '»',
 
 );

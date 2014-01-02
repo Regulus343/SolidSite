@@ -7,7 +7,7 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		last updated on September 17, 2013
+		last updated on January 1, 2014
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -121,7 +121,7 @@ class SolidSite {
 	 * @param  string   $secure
 	 * @return string
 	 */
-	public static function rootURL($uri = '', $secure = false) {
+	public static function rootUrl($uri = '', $secure = false) {
 		$url = Config::get('app.url');
 		if ($secure) $url = str_replace('http://', 'https://', $url);
 		if ($uri != "") $url .= '/'.$uri;
@@ -140,7 +140,7 @@ class SolidSite {
 		if ($package) {
 			$path = 'packages/'.$package.'/'.$path;
 		} else {
-			$path = static::get('assetsURI').'/'.$path;
+			$path = static::get('assetsUri').'/'.$path;
 		}
 
 		return static::rootURL($path, $secure);
@@ -159,11 +159,11 @@ class SolidSite {
 		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif'))) {
 			$path .= ".png";
 		}
-		$path = static::get('imgURI').'/'.$path;
+		$path = static::get('imgUri').'/'.$path;
 		if ($package) {
 			$path = 'packages/'.$package.'/'.$path;
 		} else {
-			$path = static::get('assetsURI').'/'.$path;
+			$path = static::get('assetsUri').'/'.$path;
 		}
 
 		return static::rootURL($path);
@@ -181,11 +181,11 @@ class SolidSite {
 		//add .css extension if one doesn't exist
 		if ($path != "" && File::extension($path) != "css") $path .= ".css";
 
-		$path = static::get('cssURI').'/'.$path;
+		$path = static::get('cssUri').'/'.$path;
 		if ($package) {
 			$path = 'packages/'.$package.'/'.$path;
 		} else {
-			$path = static::get('assetsURI').'/'.$path;
+			$path = static::get('assetsUri').'/'.$path;
 		}
 
 		return static::rootURL($path);
@@ -203,11 +203,11 @@ class SolidSite {
 		//add .js extension if one doesn't exist
 		if ($path != "" && File::extension($path) != "js") $path .= ".js";
 
-		$path = static::get('jsURI').'/'.$path;
+		$path = static::get('jsUri').'/'.$path;
 		if ($package) {
 			$path = 'packages/'.$package.'/'.$path;
 		} else {
-			$path = static::get('assetsURI').'/'.$path;
+			$path = static::get('assetsUri').'/'.$path;
 		}
 
 		return static::rootURL($path);
@@ -220,7 +220,7 @@ class SolidSite {
 	 * @return string
 	 */
 	public static function uploadedFile($path = '') {
-		return static::rootURL(static::get('uploadsURI').'/'.$path);
+		return static::rootUrl(static::get('uploadsUri').'/'.$path);
 	}
 
 	/**
@@ -242,7 +242,7 @@ class SolidSite {
 			if ($item == $itemToCompare)
 				$matches = true;
 		}
-		if ($matches) return static::selectedHTML($inClass, $className);
+		if ($matches) return static::selectedHtml($inClass, $className);
 		return '';
 	}
 
@@ -273,7 +273,7 @@ class SolidSite {
 		foreach ($comparisonData as $item => $itemToCompare) {
 			if (static::get($item) != $itemToCompare) return '';
 		}
-		return static::selectedHTML($inClass, $className);
+		return static::selectedHtml($inClass, $className);
 	}
 
 	/**
@@ -284,7 +284,7 @@ class SolidSite {
 	 * @param  mixed    $className
 	 * @return string
 	 */
-	private static function selectedHTML($inClass = false, $className = false)
+	private static function selectedHtml($inClass = false, $className = false)
 	{
 		if (!$className || !is_string($className) || $className == "") $className = static::get('selectedClass');
 
@@ -327,7 +327,7 @@ class SolidSite {
 	public static function createTrail($id = null)
 	{
 		$html = '';
-		if (is_null($id)) $id = static::get('trailID');
+		if (is_null($id)) $id = static::get('trailId');
 		if (!empty(static::$trailItems)) {
 			$html = '<ul id="'.$id.'">';
 			$first = true;
