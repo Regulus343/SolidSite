@@ -7,7 +7,7 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		last updated on January 1, 2014
+		last updated on July 1, 2014
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -156,7 +156,7 @@ class SolidSite {
 	 */
 	public static function img($path = '', $package = false, $addExtension = true) {
 		//if no extension is given, assume .png
-		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif'))) {
+		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif', 'svg'))) {
 			$path .= ".png";
 		}
 		$path = static::get('imgUri').'/'.$path;

@@ -74,10 +74,10 @@ SolidSite has a few methods for the purpose of highlighting menu items (adding a
 		<li<?php echo Site::selectBy('section', 'Stuff'); ?>>
 			<a href="#">Stuff</a>
 			<ul>
-				<li<?php echo Site::selectByMult(array('section' => 'Stuff', 'subSection' => 'Some Stuff')); ?>>
+				<li<?php echo Site::selectByMulti(array('section' => 'Stuff', 'subSection' => 'Some Stuff')); ?>>
 					<a href="#">Some Stuff</a>
 				</li>
-				<li class="some-class<?php echo Site::selectByMult(array('section' => 'Stuff', 'subSection' => 'Some Other Stuff'), true); ?>">
+				<li class="some-class<?php echo Site::selectByMulti(array('section' => 'Stuff', 'subSection' => 'Some Other Stuff'), true); ?>">
 					<a href="#">Some Other Stuff</a>
 				</li>
 			</ul>
