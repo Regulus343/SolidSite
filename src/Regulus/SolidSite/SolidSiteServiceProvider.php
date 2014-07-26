@@ -28,7 +28,9 @@ class SolidSiteServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		$this->app->bind('solidsite', function() {
+			return new SolidSite;
+		});
 	}
 
 	/**

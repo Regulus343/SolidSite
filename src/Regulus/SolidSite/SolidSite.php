@@ -7,7 +7,8 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		last updated on July 1, 2014
+		v0.4.0
+		last updated on July 26, 2014
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -22,7 +23,7 @@ class SolidSite {
 	/**
 	 * @var    array
 	 */
-	public static $trailItems = array();
+	public $trailItems = array();
 
 	/**
 	 * Get a config item.
@@ -30,7 +31,7 @@ class SolidSite {
 	 * @param  string   $item
 	 * @return string
 	 */
-	public static function get($item)
+	public function get($item)
 	{
 		return Config::get('solid-site::'.$item);
 	}
@@ -42,7 +43,7 @@ class SolidSite {
 	 * @param  mixed    $value
 	 * @return void
 	 */
-	public static function set($item, $value = null)
+	public function set($item, $value = null)
 	{
 		Config::set('solid-site::'.$item, $value);
 	}
@@ -54,10 +55,10 @@ class SolidSite {
 	 * @param  mixed    $value
 	 * @return void
 	 */
-	public static function setMulti($items = array(), $value = null)
+	public function setMulti($items = array(), $value = null)
 	{
 		foreach ($items as $item) {
-			static::set($item, $value);
+			$this->set($item, $value);
 		}
 	}
 
@@ -66,9 +67,9 @@ class SolidSite {
 	 *
 	 * @return string
 	 */
-	public static function name()
+	public function name()
 	{
-		return static::get('name');
+		return $this->get('name');
 	}
 
 	/**
@@ -77,18 +78,18 @@ class SolidSite {
 	 * @param  string   $title
 	 * @return string
 	 */
-	public static function title($title = null)
+	public function title($title = null)
 	{
-		if (is_null($title)) $title = static::get('title');
+		if (is_null($title)) $title = $this->get('title');
 		$title = strip_tags($title);
 		if (is_null($title) || $title == "") {
-			return static::get('name');
+			return $this->get('name');
 		} else {
 			//var_dump(Config::get('solid-site::titleSeparator')); exit;
-			if (static::get('titleNameInFront')) {
-				return static::get('name').static::get('titleSeparator').$title;
+			if ($this->get('titleNameInFront')) {
+				return $this->get('name').$this->get('titleSeparator').$title;
 			} else {
-				return $title.static::get('titleSeparator').static::get('name');
+				return $title.$this->get('titleSeparator').$this->get('name');
 			}
 		}
 	}
@@ -98,11 +99,11 @@ class SolidSite {
 	 *
 	 * @return string
 	 */
-	public static function titleHeading()
+	public function titleHeading()
 	{
-		$title = static::get('titleHeading');
+		$title = $this->get('titleHeading');
 		if (is_null($title) || $title == "" || !is_string($title))
-			$title = static::get('title');
+			$title = $this->get('title');
 
 		if (!is_string($title))
 			$title = "";
@@ -121,10 +122,15 @@ class SolidSite {
 	 * @param  string   $secure
 	 * @return string
 	 */
-	public static function rootUrl($uri = '', $secure = false) {
+	public function rootUrl($uri = '', $secure = false)
+	{
 		$url = Config::get('app.url');
-		if ($secure) $url = str_replace('http://', 'https://', $url);
-		if ($uri != "") $url .= '/'.$uri;
+		if ($secure)
+			$url = str_replace('http://', 'https://', $url);
+
+		if ($uri != "")
+			$url .= '/'.$uri;
+
 		return $url;
 	}
 
@@ -136,14 +142,14 @@ class SolidSite {
 	 * @param  mixed    $package
 	 * @return string
 	 */
-	public static function asset($path = '', $secure = false, $package = false) {
-		if ($package) {
+	public function asset($path = '', $secure = false, $package = false)
+	{
+		if ($package)
 			$path = 'packages/'.$package.'/'.$path;
-		} else {
-			$path = static::get('assetsUri').'/'.$path;
-		}
+		else
+			$path = $this->get('assetsUri').'/'.$path;
 
-		return static::rootURL($path, $secure);
+		return $this->rootURL($path, $secure);
 	}
 
 	/**
@@ -154,19 +160,21 @@ class SolidSite {
 	 * @param  string   $addExtension
 	 * @return string
 	 */
-	public static function img($path = '', $package = false, $addExtension = true) {
+	public function img($path = '', $package = false, $addExtension = true)
+	{
 		//if no extension is given, assume .png
 		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif', 'svg'))) {
 			$path .= ".png";
 		}
-		$path = static::get('imgUri').'/'.$path;
-		if ($package) {
-			$path = 'packages/'.$package.'/'.$path;
-		} else {
-			$path = static::get('assetsUri').'/'.$path;
-		}
 
-		return static::rootURL($path);
+		$path = $this->get('imgUri').'/'.$path;
+
+		if ($package)
+			$path = 'packages/'.$package.'/'.$path;
+		else
+			$path = $this->get('assetsUri').'/'.$path;
+
+		return $this->rootURL($path);
 	}
 
 	/**
@@ -177,18 +185,20 @@ class SolidSite {
 	 * @param  string   $addExtension
 	 * @return string
 	 */
-	public static function css($path = '', $package = false, $addExtension = true) {
+	public function css($path = '', $package = false, $addExtension = true)
+	{
 		//add .css extension if one doesn't exist
-		if ($path != "" && File::extension($path) != "css") $path .= ".css";
+		if ($path != "" && File::extension($path) != "css")
+			$path .= ".css";
 
-		$path = static::get('cssUri').'/'.$path;
-		if ($package) {
+		$path = $this->get('cssUri').'/'.$path;
+
+		if ($package)
 			$path = 'packages/'.$package.'/'.$path;
-		} else {
-			$path = static::get('assetsUri').'/'.$path;
-		}
+		else
+			$path = $this->get('assetsUri').'/'.$path;
 
-		return static::rootURL($path);
+		return $this->rootURL($path);
 	}
 
 	/**
@@ -199,18 +209,20 @@ class SolidSite {
 	 * @param  string   $addExtension
 	 * @return string
 	 */
-	public static function js($path = '', $package = false, $addExtension = true) {
+	public function js($path = '', $package = false, $addExtension = true)
+	{
 		//add .js extension if one doesn't exist
-		if ($path != "" && File::extension($path) != "js") $path .= ".js";
+		if ($path != "" && File::extension($path) != "js")
+			$path .= ".js";
 
-		$path = static::get('jsUri').'/'.$path;
-		if ($package) {
+		$path = $this->get('jsUri').'/'.$path;
+
+		if ($package)
 			$path = 'packages/'.$package.'/'.$path;
-		} else {
-			$path = static::get('assetsUri').'/'.$path;
-		}
+		else
+			$path = $this->get('assetsUri').'/'.$path;
 
-		return static::rootURL($path);
+		return $this->rootURL($path);
 	}
 
 	/**
@@ -219,8 +231,9 @@ class SolidSite {
 	 * @param  string   $path
 	 * @return string
 	 */
-	public static function uploadedFile($path = '') {
-		return static::rootUrl(static::get('uploadsUri').'/'.$path);
+	public function uploadedFile($path = '')
+	{
+		return $this->rootUrl($this->get('uploadsUri').'/'.$path);
 	}
 
 	/**
@@ -232,7 +245,7 @@ class SolidSite {
 	 * @param  mixed    $className
 	 * @return string
 	 */
-	public static function selectForMatch($item, $itemToCompare, $inClass = false, $className = false)
+	public function selectForMatch($item, $itemToCompare, $inClass = false, $className = false)
 	{
 		$matches = false;
 		if (is_array($itemToCompare)) {
@@ -242,7 +255,7 @@ class SolidSite {
 			if ($item == $itemToCompare)
 				$matches = true;
 		}
-		if ($matches) return static::selectedHtml($inClass, $className);
+		if ($matches) return $this->selectedHtml($inClass, $className);
 		return '';
 	}
 
@@ -255,9 +268,9 @@ class SolidSite {
 	 * @param  mixed    $className
 	 * @return string
 	 */
-	public static function selectBy($type = 'section', $itemToCompare = '', $inClass = false, $className = false)
+	public function selectBy($type = 'section', $itemToCompare = '', $inClass = false, $className = false)
 	{
-		return static::selectForMatch(static::get($type), $itemToCompare, $inClass, $className);
+		return $this->selectForMatch($this->get($type), $itemToCompare, $inClass, $className);
 	}
 
 	/**
@@ -268,12 +281,12 @@ class SolidSite {
 	 * @param  mixed    $className
 	 * @return string
 	 */
-	public static function selectByMulti($comparisonData = array(), $inClass = false, $className = false)
+	public function selectByMulti($comparisonData = array(), $inClass = false, $className = false)
 	{
 		foreach ($comparisonData as $item => $itemToCompare) {
-			if (static::get($item) != $itemToCompare) return '';
+			if ($this->get($item) != $itemToCompare) return '';
 		}
-		return static::selectedHtml($inClass, $className);
+		return $this->selectedHtml($inClass, $className);
 	}
 
 	/**
@@ -284,9 +297,9 @@ class SolidSite {
 	 * @param  mixed    $className
 	 * @return string
 	 */
-	private static function selectedHtml($inClass = false, $className = false)
+	private function selectedHtml($inClass = false, $className = false)
 	{
-		if (!$className || !is_string($className) || $className == "") $className = static::get('selectedClass');
+		if (!$className || !is_string($className) || $className == "") $className = $this->get('selectedClass');
 
 		if ($inClass) {
 			return ' '.$className;
@@ -302,9 +315,9 @@ class SolidSite {
 	 * @param  string   $uri
 	 * @return void
 	 */
-	public static function addTrailItem($title = '', $uri = '')
+	public function addTrailItem($title = '', $uri = '')
 	{
-		if ($title != "") static::$trailItems[] = (object) array('title' => $title, 'uri' => $uri);
+		if ($title != "") $this->trailItems[] = (object) array('title' => $title, 'uri' => $uri);
 	}
 
 	/**
@@ -312,9 +325,9 @@ class SolidSite {
 	 *
 	 * @return array
 	 */
-	public static function getTrailItems()
+	public function getTrailItems()
 	{
-		return static::$trailItems;
+		return $this->trailItems;
 	}
 
 	/**
@@ -322,33 +335,40 @@ class SolidSite {
 	 *
 	 * @param  string   $title
 	 * @param  string   $uri
-	 * @return void
+	 * @return string
 	 */
-	public static function createTrail($id = null)
+	public function createTrail($id = null)
 	{
 		$html = '';
-		if (is_null($id)) $id = static::get('trailId');
-		if (!empty(static::$trailItems)) {
-			$html = '<ul id="'.$id.'">';
+		if (is_null($id))
+			$id = $this->get('trailId');
+
+		if (!empty($this->trailItems)) {
+			$html  = '<ul id="'.$id.'">';
 			$first = true;
-			foreach (static::$trailItems as $trailItem) {
+
+			foreach ($this->trailItems as $trailItem) {
 				$html .= '<li>';
-				if (!$first) $html .= '<span>'.Format::entities(static::get('trailSeparator')).'</span>';
+
+				if (!$first)
+					$html .= '<span>'.Format::entities($this->get('trailSeparator')).'</span>';
+
 				$html .= '<a href="'.URL::to($trailItem->uri).'">'.Format::entities($trailItem->title).'</a>';
 				$html .= '</li>';
 				$first = false;
 			}
 			$html .= '</ul>';
 		}
+
 		return $html;
 	}
 
 	/**
 	 * Set the user to "developer" status.
 	 *
-	 * @return boolean
+	 * @return void
 	 */
-	public static function setDeveloper()
+	public function setDeveloper()
 	{
 		Session::set('developer', true);
 	}
@@ -358,7 +378,7 @@ class SolidSite {
 	 *
 	 * @return boolean
 	 */
-	public static function developer()
+	public function developer()
 	{
 		$developer = Session::get('developer');
 		return !is_null($developer) && $developer ? true : false;
