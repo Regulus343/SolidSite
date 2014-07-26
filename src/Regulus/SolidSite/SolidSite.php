@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
-use Regulus\TetraText\TetraText as Format;
+use Regulus\TetraText\Facade as Format;
 
 class SolidSite {
 
