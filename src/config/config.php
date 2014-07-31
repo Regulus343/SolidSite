@@ -15,20 +15,21 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
-	| Assets, Image, CSS, JS, and Uploads Paths
+	| Assets, Image, SVG, CSS, JS, and Uploads Paths
 	|--------------------------------------------------------------------------
 	|
 	| The URI variables can be used to easily load assets using Site::asset(),
-	| Site::img(), Site::css(), Site::js(), and Site::uploadedFile() to create
-	| URLS for your assets. "imgURI", "cssURI", "jsURI", and "uploadsURI" will
-	| be appended to the end of "assetsURI", so by default
-	| Site::img('image-name') would create a URL of
+	| Site::img(), Site::css(), Site::js(), Site::svg(), and
+	| Site::uploadedFile() to create URLS for your assets. "imgURI", "cssURI",
+	| "jsURI", and "uploadsURI" will be appended to the end of "assetsURI", so
+	| by default Site::img('image-name') would create a URL of
 	| http:://website.com/assets/img/image-name.png ("png" being the assumed
 	| extension if one is not explicitly specified.
 	|
 	*/
 	'assetsUri'  => 'assets',
 	'imgUri'     => 'images',
+	'svgUri'     => 'svg',
 	'cssUri'     => 'css',
 	'jsUri'      => 'js',
 	'uploadsUri' => 'uploads',

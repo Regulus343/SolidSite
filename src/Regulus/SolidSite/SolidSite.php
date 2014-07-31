@@ -7,8 +7,8 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.4.0
-		last updated on July 26, 2014
+		v0.4.1
+		last updated on July 30, 2014
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -163,9 +163,8 @@ class SolidSite {
 	public function img($path = '', $package = false, $addExtension = true)
 	{
 		//if no extension is given, assume .png
-		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif', 'svg'))) {
+		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif', 'svg')))
 			$path .= ".png";
-		}
 
 		$path = $this->get('imgUri').'/'.$path;
 
@@ -223,6 +222,36 @@ class SolidSite {
 			$path = $this->get('assetsUri').'/'.$path;
 
 		return $this->rootURL($path);
+	}
+
+	/**
+	 * Get the contents of an SVG file.
+	 *
+	 * @param  string   $path
+	 * @param  mixed    $package
+	 * @return string
+	 */
+	public function svg($path = '', $package = false)
+	{
+		//if no extension is given, assume .png
+		if ($path != "" && !in_array(File::extension($path), array('svg')))
+			$path .= ".svg";
+
+		$svgUri = $this->get('svgUri');
+		if ($svgUri != "" && $svgUri != false && !is_null($svgUri))
+			$path = $svgUri.'/'.$path;
+
+		$path = $this->get('imgUri').'/'.$path;
+
+		if ($package)
+			$path = 'packages/'.$package.'/'.$path;
+		else
+			$path = $this->get('assetsUri').'/'.$path;
+
+		if (is_file($path))
+			return file_get_contents($path);
+		else
+			return "";
 	}
 
 	/**
