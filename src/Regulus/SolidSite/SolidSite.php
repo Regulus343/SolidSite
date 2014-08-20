@@ -7,8 +7,8 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.4.1
-		last updated on July 30, 2014
+		v0.4.2
+		last updated on August 19, 2014
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -112,6 +112,28 @@ class SolidSite {
 			$title = Format::entities($title);
 
 		return $title;
+	}
+
+	/**
+	 * Create a URL.
+	 *
+	 * @param  mixed    $uri
+	 * @param  mixed    $subdomain
+	 * @return string
+	 */
+	public function url($uri = null, $subdomain = null)
+	{
+		if (is_null($uri) || $uri === false)
+			$uri = "";
+
+		$url = URL::to($uri);
+
+		if ($subdomain != "" && $subdomain !== false && !is_null($subdomain)) {
+			$url = str_replace($subdomain.'.', '', $url);
+			$url = str_replace('http://', 'http://'.$subdomain.'.', str_replace('https://', 'https://'.$subdomain.'.', $url));
+		}
+
+		return $url;
 	}
 
 	/**
