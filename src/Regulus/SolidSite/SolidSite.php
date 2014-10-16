@@ -479,7 +479,9 @@ class SolidSite {
 
 			foreach ($this->buttons as $button)
 			{
-				$html .= '<button';
+				$tag = (!is_null($button->uri) || !is_null($button->url) ? 'a' : 'button');
+
+				$html .= '<'.$tag;
 
 				if (!is_null($button->uri)) {
 					$html .= ' href="'.URL::to($button->uri).'"';
@@ -501,7 +503,7 @@ class SolidSite {
 				if (!is_null($button->icon))
 					$html .= '<span class="'.$button->icon.'"></span> ';
 
-				$html .= Format::entities($button->label).'</button>'."\n";
+				$html .= Format::entities($button->label).'</'.$tag.'>'."\n";
 			}
 
 			$html .= '</div>'."\n";
