@@ -84,10 +84,9 @@ return array(
 	| Breadcrumb Trail
 	|--------------------------------------------------------------------------
 	|
-	| The ID and the separator symbol for breadcrumb trails.
+	| The ID for breadcrumb trails.
 	|
 	*/
-	'trailId'        => 'breadcrumb-trail',
-	'trailSeparator' => '»',
+	'trailId' => 'breadcrumb-trail',
 
 );

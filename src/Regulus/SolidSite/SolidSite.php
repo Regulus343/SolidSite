@@ -7,8 +7,8 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.4.2
-		last updated on August 19, 2014
+		v0.4.4
+		last updated on October 15, 2014
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -23,7 +23,12 @@ class SolidSite {
 	/**
 	 * @var    array
 	 */
-	public $trailItems = array();
+	public $trailItems = [];
+
+	/**
+	 * @var    array
+	 */
+	public $buttons = [];
 
 	/**
 	 * Get a config item.
@@ -366,13 +371,17 @@ class SolidSite {
 	 * @param  string   $uri
 	 * @return void
 	 */
-	public function addTrailItem($title = '', $uri = '')
+	public function addTrailItem($title = '', $uri = null)
 	{
-		if ($title != "") $this->trailItems[] = (object) array('title' => $title, 'uri' => $uri);
+		if ($title != "")
+			$this->trailItems[] = (object) [
+				'title' => $title,
+				'uri'   => $uri,
+			];
 	}
 
 	/**
-	 * Add an item to the breadcrumb trail.
+	 * Get the breadcrumb trail items.
 	 *
 	 * @return array
 	 */
@@ -384,31 +393,112 @@ class SolidSite {
 	/**
 	 * Create HTML for breadcrumb trail.
 	 *
-	 * @param  string   $title
-	 * @param  string   $uri
+	 * @param  mixed    $id
 	 * @return string
 	 */
-	public function createTrail($id = null)
+	public function getBreadcrumbTrailMarkup($id = null)
 	{
 		$html = '';
 		if (is_null($id))
 			$id = $this->get('trailId');
 
-		if (!empty($this->trailItems)) {
-			$html  = '<ul id="'.$id.'">';
-			$first = true;
+		if (!empty($this->trailItems))
+		{
+			$html  = '<ol class="breadcrumb"'.(!is_null($id) ? ' id="'.$id.'"' : '').'>'."\n";
 
-			foreach ($this->trailItems as $trailItem) {
-				$html .= '<li>';
+			foreach ($this->trailItems as $i => $item)
+			{
+				$html .= '<li'.($i + 1 == count($this->trailItems) ? ' class="active"' : '').'>';
 
-				if (!$first)
-					$html .= '<span>'.Format::entities($this->get('trailSeparator')).'</span>';
+				if (!is_null($item->uri))
+					$html .= '<a href="'.URL::to($item->uri).'">'.Format::entities($item->title).'</a>';
+				else
+					$html .= Format::entities($item->title);
 
-				$html .= '<a href="'.URL::to($trailItem->uri).'">'.Format::entities($trailItem->title).'</a>';
-				$html .= '</li>';
-				$first = false;
+				$html .= '</li>'."\n";
 			}
-			$html .= '</ul>';
+
+			$html .= '</ol>'."\n";
+		}
+
+		return $html;
+	}
+
+	/**
+	 * Add a button to the button list.
+	 *
+	 * @param  mixed    $label
+	 * @param  string   $uri
+	 * @return void
+	 */
+	public function addButton($label = '', $uri = null)
+	{
+		$button = [
+			'label' => null,
+			'uri'   => null,
+			'url'   => null,
+			'class' => null,
+			'id'    => null,
+		];
+
+		if (is_array($label)) {
+			$button = array_merge($button, $label);
+		} else {
+			$button['label'] = $label;
+			$button['uri']   = $uri;
+		}
+
+		if (!is_null($button['label']) && $button['label'] != "")
+			$this->buttons[] = (object) $button;
+	}
+
+	/**
+	 * Get the button list.
+	 *
+	 * @return array
+	 */
+	public function getButtons()
+	{
+		return $this->buttons;
+	}
+
+	/**
+	 * Create HTML for button list.
+	 *
+	 * @param  mixed    $class
+	 * @return string
+	 */
+	public function getButtonListMarkup($class = 'button-group')
+	{
+		$html = '';
+
+		if (!empty($this->buttons))
+		{
+			$html  = '<div class="'.trim($class).'">'."\n";
+
+			foreach ($this->buttons as $button)
+			{
+				$html .= '<button';
+
+				if (!is_null($button->uri)) {
+					$html .= ' href="'.URL::to($uri).'"';
+				} else {
+					if (!is_null($button->url))
+						$html .= ' href="'.$url.'" target="_blank"';
+				}
+
+				if (!is_null($button->class))
+					$html .= ' class="'.$class.'"';
+				else
+					$html .= ' class="btn btn-default"';
+
+				if (!is_null($button->id))
+					$html .= ' id="'.$id.'"';
+
+				$html .= '>'.Format::entities($button->label).'</button>'."\n";
+			}
+
+			$html .= '</div>'."\n";
 		}
 
 		return $html;
