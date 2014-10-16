@@ -437,6 +437,7 @@ class SolidSite {
 			'label' => null,
 			'uri'   => null,
 			'url'   => null,
+			'icon'  => null,
 			'class' => null,
 			'id'    => null,
 		];
@@ -481,10 +482,10 @@ class SolidSite {
 				$html .= '<button';
 
 				if (!is_null($button->uri)) {
-					$html .= ' href="'.URL::to($uri).'"';
+					$html .= ' href="'.URL::to($button->uri).'"';
 				} else {
 					if (!is_null($button->url))
-						$html .= ' href="'.$url.'" target="_blank"';
+						$html .= ' href="'.$button->url.'" target="_blank"';
 				}
 
 				if (!is_null($button->class))
@@ -495,7 +496,12 @@ class SolidSite {
 				if (!is_null($button->id))
 					$html .= ' id="'.$id.'"';
 
-				$html .= '>'.Format::entities($button->label).'</button>'."\n";
+				$html .= '>';
+
+				if (!is_null($button->icon))
+					$html .= '<span class="'.$button->icon.'"></span> ';
+
+				$html .= Format::entities($button->label).'</button>'."\n";
 			}
 
 			$html .= '</div>'."\n";
