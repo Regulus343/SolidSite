@@ -7,7 +7,7 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.4.4
+		v0.4.5
 		last updated on October 15, 2014
 ----------------------------------------------------------------------------------------------------------*/
 
@@ -381,6 +381,19 @@ class SolidSite {
 	}
 
 	/**
+	 * Add items to the breadcrumb trail.
+	 *
+	 * @param  array    $items
+	 * @return void
+	 */
+	public function addTrailItems($items)
+	{
+		foreach ($items as $item) {
+			static::addTrailItem($item);
+		}
+	}
+
+	/**
 	 * Get the breadcrumb trail items.
 	 *
 	 * @return array
@@ -451,6 +464,19 @@ class SolidSite {
 
 		if (!is_null($button['label']) && $button['label'] != "")
 			$this->buttons[] = (object) $button;
+	}
+
+	/**
+	 * Add buttons to the button list.
+	 *
+	 * @param  array    $buttons
+	 * @return void
+	 */
+	public function addButtons($buttons)
+	{
+		foreach ($buttons as $button) {
+			static::addButton($button);
+		}
 	}
 
 	/**
