@@ -89,4 +89,14 @@ return array(
 	*/
 	'trailId' => 'breadcrumb-trail',
 
+	/*
+	|--------------------------------------------------------------------------
+	| Use Root For Assets
+	|--------------------------------------------------------------------------
+	|
+	| Whether or not to use the root URL by default for asset URLs.
+	|
+	*/
+	'useRootForAssets' => true,
+
 );

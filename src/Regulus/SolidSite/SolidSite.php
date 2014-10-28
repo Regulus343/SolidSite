@@ -7,12 +7,13 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.4.5
-		last updated on October 15, 2014
+		v0.4.6
+		last updated on October 27, 2014
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
@@ -124,19 +125,30 @@ class SolidSite {
 	 *
 	 * @param  mixed    $uri
 	 * @param  mixed    $subdomain
+	 * @param  boolean  $secure
 	 * @return string
 	 */
-	public function url($uri = null, $subdomain = null)
+	public function url($uri = null, $subdomain = null, $secure = false)
 	{
 		if (is_null($uri) || $uri === false)
 			$uri = "";
 
 		$url = URL::to($uri);
 
+		if ($subdomain === true) {
+			$subdomain = Route::getCurrentRoute()->getParameter('subdomain');
+
+			if ($subdomain == "")
+				$subdomain = false;
+		}
+
 		if ($subdomain != "" && $subdomain !== false && !is_null($subdomain)) {
 			$url = str_replace($subdomain.'.', '', $url);
 			$url = str_replace('http://', 'http://'.$subdomain.'.', str_replace('https://', 'https://'.$subdomain.'.', $url));
 		}
+
+		if ($secure)
+			$url = str_replace('http://', 'https://', $url);
 
 		return $url;
 	}
@@ -146,12 +158,13 @@ class SolidSite {
 	 * because URL::to() will create a URL with the current subdomain instead of the website's root.
 	 *
 	 * @param  string   $uri
-	 * @param  string   $secure
+	 * @param  boolean  $secure
 	 * @return string
 	 */
 	public function rootUrl($uri = '', $secure = false)
 	{
 		$url = Config::get('app.url');
+
 		if ($secure)
 			$url = str_replace('http://', 'https://', $url);
 
@@ -167,16 +180,20 @@ class SolidSite {
 	 * @param  string   $path
 	 * @param  boolean  $secure
 	 * @param  mixed    $package
+	 * @param  mixed    $useRoot
 	 * @return string
 	 */
-	public function asset($path = '', $secure = false, $package = false)
+	public function asset($path = '', $secure = false, $package = false, $useRoot = null)
 	{
 		if ($package)
 			$path = 'packages/'.$package.'/'.$path;
 		else
 			$path = $this->get('assetsUri').'/'.$path;
 
-		return $this->rootURL($path, $secure);
+		if (is_null($useRoot))
+			$useRoot = $this->get('useRoot');
+
+		return $useRoot ? $this->rootUrl($path) : $this->url($path, true);
 	}
 
 	/**
@@ -185,9 +202,10 @@ class SolidSite {
 	 * @param  string   $path
 	 * @param  mixed    $package
 	 * @param  string   $addExtension
+	 * @param  mixed    $useRoot
 	 * @return string
 	 */
-	public function img($path = '', $package = false, $addExtension = true)
+	public function img($path = '', $package = false, $addExtension = true, $useRoot = null)
 	{
 		//if no extension is given, assume .png
 		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif', 'svg')))
@@ -200,7 +218,10 @@ class SolidSite {
 		else
 			$path = $this->get('assetsUri').'/'.$path;
 
-		return $this->rootURL($path);
+		if (is_null($useRoot))
+			$useRoot = $this->get('useRoot');
+
+		return $useRoot ? $this->rootUrl($path) : $this->url($path, true);
 	}
 
 	/**
@@ -208,10 +229,10 @@ class SolidSite {
 	 *
 	 * @param  string   $path
 	 * @param  mixed    $package
-	 * @param  string   $addExtension
+	 * @param  mixed    $useRoot
 	 * @return string
 	 */
-	public function css($path = '', $package = false, $addExtension = true)
+	public function css($path = '', $package = false, $useRoot = null)
 	{
 		//add .css extension if one doesn't exist
 		if ($path != "" && File::extension($path) != "css")
@@ -224,7 +245,10 @@ class SolidSite {
 		else
 			$path = $this->get('assetsUri').'/'.$path;
 
-		return $this->rootURL($path);
+		if (is_null($useRoot))
+			$useRoot = $this->get('useRoot');
+
+		return $useRoot ? $this->rootUrl($path) : $this->url($path, true);
 	}
 
 	/**
@@ -233,9 +257,10 @@ class SolidSite {
 	 * @param  string   $path
 	 * @param  mixed    $package
 	 * @param  string   $addExtension
+	 * @param  mixed    $useSubdomain
 	 * @return string
 	 */
-	public function js($path = '', $package = false, $addExtension = true)
+	public function js($path = '', $package = false, $addExtension = true, $useRoot = null)
 	{
 		//add .js extension if one doesn't exist
 		if ($path != "" && File::extension($path) != "js")
@@ -248,7 +273,10 @@ class SolidSite {
 		else
 			$path = $this->get('assetsUri').'/'.$path;
 
-		return $this->rootURL($path);
+		if (is_null($useRoot))
+			$useRoot = $this->get('useRoot');
+
+		return $useRoot ? $this->rootUrl($path) : $this->url($path, true);
 	}
 
 	/**
