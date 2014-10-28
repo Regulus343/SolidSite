@@ -416,8 +416,8 @@ class SolidSite {
 	 */
 	public function addTrailItems($items)
 	{
-		foreach ($items as $item) {
-			static::addTrailItem($item);
+		foreach ($items as $title => $uri) {
+			$this->addTrailItem($title, $uri);
 		}
 	}
 
@@ -429,6 +429,16 @@ class SolidSite {
 	public function getTrailItems()
 	{
 		return $this->trailItems;
+	}
+
+	/**
+	 * Reset the breadcrumb trail items.
+	 *
+	 * @return void
+	 */
+	public function resetTrailItems()
+	{
+		$this->trailItems = [];
 	}
 
 	/**
@@ -452,9 +462,16 @@ class SolidSite {
 				$html .= '<li'.($i + 1 == count($this->trailItems) ? ' class="active"' : '').'>';
 
 				if (!is_null($item->uri))
-					$html .= '<a href="'.URL::to($item->uri).'">'.Format::entities($item->title).'</a>';
-				else
+				{
+					if (substr($item->uri, 0, 7) == "http://" || substr($item->uri, 0, 8) == "https://")
+						$url = $item->uri;
+					else
+						$url = URL::to($item->uri);
+
+					$html .= '<a href="'.$url.'">'.Format::entities($item->title).'</a>';
+				} else {
 					$html .= Format::entities($item->title);
+				}
 
 				$html .= '</li>'."\n";
 			}
@@ -503,7 +520,7 @@ class SolidSite {
 	public function addButtons($buttons)
 	{
 		foreach ($buttons as $button) {
-			static::addButton($button);
+			$this->addButton($button);
 		}
 	}
 
@@ -515,6 +532,16 @@ class SolidSite {
 	public function getButtons()
 	{
 		return $this->buttons;
+	}
+
+	/**
+	 * Reset the button list.
+	 *
+	 * @return void
+	 */
+	public function resetButtons()
+	{
+		$this->buttons = [];
 	}
 
 	/**
