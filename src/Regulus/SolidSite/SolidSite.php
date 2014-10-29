@@ -8,7 +8,7 @@
 
 		created by Cody Jassman
 		v0.4.6
-		last updated on October 27, 2014
+		last updated on October 28, 2014
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -135,11 +135,17 @@ class SolidSite {
 
 		$url = URL::to($uri);
 
-		if ($subdomain === true) {
-			$subdomain = Route::getCurrentRoute()->getParameter('subdomain');
+		if ($subdomain === true)
+		{
+			$route = Route::getCurrentRoute();
+			if ($route) {
+				$subdomain = $route->getParameter('subdomain');
 
-			if ($subdomain == "")
+				if ($subdomain == "")
+					$subdomain = false;
+			} else {
 				$subdomain = false;
+			}
 		}
 
 		if ($subdomain != "" && $subdomain !== false && !is_null($subdomain)) {
