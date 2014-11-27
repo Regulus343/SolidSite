@@ -20,5 +20,5 @@
 			"Regulus\\SolidSite": "src/"
 		}
 	},
-	"minimum-stability": "dev"
+	"minimum-stability": "stable"
 }
