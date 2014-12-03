@@ -148,13 +148,13 @@ class SolidSite {
 			}
 		}
 
-		if ($subdomain != "" && $subdomain !== false && !is_null($subdomain))
-		{
-			$baseUrl = str_replace('https://', '', str_replace('http://', '', Config::get('app.url')));
+		//remove subdomain if one exists
+		$baseUrl = str_replace('https://', '', str_replace('http://', '', Config::get('app.url')));
+		$url     = preg_replace('/(http[s]?:\/\/)[A-Za-z0-9]*[\.]?('.str_replace('.', '\.', $baseUrl).')/', '${1}${2}', $url);
 
-			$url = preg_replace('/(http[s]?:\/\/)[A-Za-z0-9]*[\.]?('.str_replace('.', '\.', $baseUrl).')/', '${1}${2}', $url);
+		//add subdomain if one is set
+		if ($subdomain != "" && $subdomain !== false && !is_null($subdomain))
 			$url = preg_replace('/(http[s]?:\/\/)('.str_replace('.', '\.', $baseUrl).')/', '${1}'.$subdomain.'.${2}', $url);
-		}
 
 		if ($secure)
 			$url = str_replace('http://', 'https://', $url);
