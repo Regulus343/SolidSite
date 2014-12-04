@@ -7,8 +7,8 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.4.8
-		last updated on December 2, 2014
+		v0.4.9
+		last updated on December 3, 2014
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -135,26 +135,17 @@ class SolidSite {
 
 		$url = URL::to($uri);
 
-		if ($subdomain === true)
-		{
-			$route = Route::getCurrentRoute();
-			if ($route) {
-				$subdomain = $route->getParameter('subdomain');
-
-				if ($subdomain == "")
-					$subdomain = false;
-			} else {
-				$subdomain = false;
-			}
-		}
-
-		//remove subdomain if one exists
 		$baseUrl = str_replace('https://', '', str_replace('http://', '', Config::get('app.url')));
-		$url     = preg_replace('/(http[s]?:\/\/)[A-Za-z0-9]*[\.]?('.str_replace('.', '\.', $baseUrl).')/', '${1}${2}', $url);
 
-		//add subdomain if one is set
-		if ($subdomain != "" && $subdomain !== false && !is_null($subdomain))
-			$url = preg_replace('/(http[s]?:\/\/)('.str_replace('.', '\.', $baseUrl).')/', '${1}'.$subdomain.'.${2}', $url);
+		if ($subdomain !== true)
+		{
+			//remove subdomain if one exists
+			$url = preg_replace('/(http[s]?:\/\/)[A-Za-z0-9]*[\.]?('.str_replace('.', '\.', $baseUrl).')/', '${1}${2}', $url);
+
+			//add subdomain if one is set
+			if ($subdomain != "" && $subdomain !== false && !is_null($subdomain))
+				$url = preg_replace('/(http[s]?:\/\/)('.str_replace('.', '\.', $baseUrl).')/', '${1}'.$subdomain.'.${2}', $url);
+		}
 
 		if ($secure)
 			$url = str_replace('http://', 'https://', $url);
