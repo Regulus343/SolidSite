@@ -172,15 +172,7 @@ class SolidSite {
 	 */
 	public function rootUrl($uri = '', $secure = false)
 	{
-		$url = Config::get('app.url');
-
-		if ($secure)
-			$url = str_replace('http://', 'https://', $url);
-
-		if ($uri != "")
-			$url .= '/'.$uri;
-
-		return $url;
+		return $this->url($uri, null, $secure);
 	}
 
 	/**
