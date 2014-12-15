@@ -7,8 +7,8 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.4.9
-		last updated on December 3, 2014
+		v0.5.0
+		last updated on December 14, 2014
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -35,11 +35,12 @@ class SolidSite {
 	 * Get a config item.
 	 *
 	 * @param  string   $item
+	 * @param  mixed    $default
 	 * @return string
 	 */
-	public function get($item)
+	public function get($item, $default = null)
 	{
-		return Config::get('solid-site::'.$item);
+		return Config::get('solid-site::'.$item, $default);
 	}
 
 	/**
@@ -200,7 +201,7 @@ class SolidSite {
 	public function img($path = '', $package = false, $addExtension = true, $useRoot = null)
 	{
 		//if no extension is given, assume .png
-		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif', 'svg')))
+		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif', 'ico', 'svg')))
 			$path .= ".png";
 
 		$path = $this->get('imgUri').'/'.$path;
