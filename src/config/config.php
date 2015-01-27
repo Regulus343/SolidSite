@@ -27,6 +27,7 @@ return array(
 	| extension if one is not explicitly specified.
 	|
 	*/
+	'rootUri'    => '',
 	'assetsUri'  => 'assets',
 	'imgUri'     => 'images',
 	'svgUri'     => 'svg',

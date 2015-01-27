@@ -7,8 +7,8 @@
 		information such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.5.0
-		last updated on December 14, 2014
+		v0.5.2
+		last updated on January 26, 2015
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -82,35 +82,39 @@ class SolidSite {
 	/**
 	 * Get the title for a web page's title tag.
 	 *
-	 * @param  string   $title
+	 * @param  mixed    $title
 	 * @return string
 	 */
 	public function title($title = null)
 	{
-		if (is_null($title)) $title = $this->get('title');
+		if (is_null($title))
+			$title = $this->get('title');
+
 		$title = strip_tags($title);
 		if (is_null($title) || $title == "") {
 			return $this->get('name');
 		} else {
-			//var_dump(Config::get('solid-site::titleSeparator')); exit;
-			if ($this->get('titleNameInFront')) {
+			if ($this->get('titleNameInFront'))
 				return $this->get('name').$this->get('titleSeparator').$title;
-			} else {
+			else
 				return $title.$this->get('titleSeparator').$this->get('name');
-			}
 		}
 	}
 
 	/**
 	 * Get the heading title. If no specific heading title is set, the regular title is used.
 	 *
+	 * @param  boolean  $useSiteName
 	 * @return string
 	 */
-	public function titleHeading()
+	public function titleHeading($useSiteName = false)
 	{
 		$title = $this->get('titleHeading');
 		if (is_null($title) || $title == "" || !is_string($title))
 			$title = $this->get('title');
+
+		if ((is_null($title) || $title == "" || !is_string($title)) && $useSiteName)
+			$title = $this->name();
 
 		if (!is_string($title))
 			$title = "";
@@ -168,6 +172,57 @@ class SolidSite {
 	}
 
 	/**
+	 * Get the assets directory URI.
+	 *
+	 * @return string
+	 */
+	public function getAssetsUri()
+	{
+		$uri = $this->get('rootUri');
+
+		if (is_null($uri) || $uri == "" || !$uri)
+			$uri = $this->get('assetsUri');
+		else
+			$uri .= '/'.$this->get('assetsUri');
+
+		return $uri;
+	}
+
+	/**
+	 * Get the packages directory URI.
+	 *
+	 * @return string
+	 */
+	public function getPackagesUri()
+	{
+		$uri = $this->get('rootUri');
+
+		if (is_null($uri) || $uri == "" || !$uri)
+			$uri = 'packages';
+		else
+			$uri .= '/packages';
+
+		return $uri;
+	}
+
+	/**
+	 * Get the directory for a path.
+	 *
+	 * @param  string   $path
+	 * @param  mixed    $package
+	 * @return string
+	 */
+	public function getDirectoryForPath($path = '', $package = false)
+	{
+		if ($package)
+			$path = $this->getPackagesUri().'/'.$package.'/'.$path;
+		else
+			$path = $this->getAssetsUri().'/'.$path;
+
+		return $path;
+	}
+
+	/**
 	 * Create a URL for an asset.
 	 *
 	 * @param  string   $path
@@ -178,10 +233,7 @@ class SolidSite {
 	 */
 	public function asset($path = '', $secure = false, $package = false, $useRoot = null)
 	{
-		if ($package)
-			$path = 'packages/'.$package.'/'.$path;
-		else
-			$path = $this->get('assetsUri').'/'.$path;
+		$path = $this->getDirectoryForPath($path, $package);
 
 		if (is_null($useRoot))
 			$useRoot = $this->get('useRoot');
@@ -204,12 +256,7 @@ class SolidSite {
 		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif', 'ico', 'svg')))
 			$path .= ".png";
 
-		$path = $this->get('imgUri').'/'.$path;
-
-		if ($package)
-			$path = 'packages/'.$package.'/'.$path;
-		else
-			$path = $this->get('assetsUri').'/'.$path;
+		$path = $this->getDirectoryForPath($this->get('imgUri').'/'.$path, $package);
 
 		if (is_null($useRoot))
 			$useRoot = $this->get('useRoot');
@@ -231,12 +278,7 @@ class SolidSite {
 		if ($path != "" && File::extension($path) != "css")
 			$path .= ".css";
 
-		$path = $this->get('cssUri').'/'.$path;
-
-		if ($package)
-			$path = 'packages/'.$package.'/'.$path;
-		else
-			$path = $this->get('assetsUri').'/'.$path;
+		$path = $this->getDirectoryForPath($this->get('cssUri').'/'.$path, $package);
 
 		if (is_null($useRoot))
 			$useRoot = $this->get('useRoot');
@@ -259,12 +301,7 @@ class SolidSite {
 		if ($path != "" && File::extension($path) != "js")
 			$path .= ".js";
 
-		$path = $this->get('jsUri').'/'.$path;
-
-		if ($package)
-			$path = 'packages/'.$package.'/'.$path;
-		else
-			$path = $this->get('assetsUri').'/'.$path;
+		$path = $this->getDirectoryForPath($this->get('jsUri').'/'.$path, $package);
 
 		if (is_null($useRoot))
 			$useRoot = $this->get('useRoot');
@@ -289,12 +326,7 @@ class SolidSite {
 		if ($svgUri != "" && $svgUri != false && !is_null($svgUri))
 			$path = $svgUri.'/'.$path;
 
-		$path = $this->get('imgUri').'/'.$path;
-
-		if ($package)
-			$path = 'packages/'.$package.'/'.$path;
-		else
-			$path = $this->get('assetsUri').'/'.$path;
+		$path = $this->getDirectoryForPath($this->get('imgUri').'/'.$path, $package);
 
 		if (is_file($path))
 			return file_get_contents($path);
