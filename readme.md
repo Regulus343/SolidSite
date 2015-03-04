@@ -1,7 +1,9 @@
 SolidSite
 =========
 
-A composer package that assigns section name and titles to controller functions and simplifies creation of breadcrumb trails and is useful for other components that require page identifying information such as menus that highlight the current location.
+**A Laravel 5 composer package that assigns section names & titles to pages, simplifies creation of breadcrumb trails, and is useful for other components that require page identifying information such as menus that highlight the current location.**
+
+> **Note:** For Laravel 4, you may use <a href="https://github.com/Regulus343/SolidSite/tree/v0.5.2">version 0.5.2</a>.
 
 - [Installation](#installation)
 - [Setting Sections, Sub Sections, and Titles](#setting-identifiers)
@@ -12,13 +14,13 @@ A composer package that assigns section name and titles to controller functions 
 <a name="installation"></a>
 ## Installation
 
-To install SolidSite, make sure "regulus/solid-site" has been added to Laravel 4's `composer.json` file.
+To install SolidSite, make sure "regulus/solid-site" has been added to Laravel 5's `composer.json` file.
 
 	"require": {
 		"regulus/solid-site": "0.5.2"
 	},
 
-Then run `php composer.phar update` from the command line. Composer will install the SolidSite package. Now, all you have to do is register the service provider and set up SolidSite's alias in `app/config/app.php`. Add this to the `providers` array:
+Then run `php composer.phar update` from the command line. Composer will install the SolidSite package. Now, all you have to do is register the service provider and set up SolidSite's alias in `config/app.php`. Add this to the `providers` array:
 
 	'Regulus\SolidSite\SolidSiteServiceProvider',
 
@@ -27,6 +29,10 @@ And add this to the `aliases` array:
 	'Site' => 'Regulus\SolidSite\Facade',
 
 You may use 'SolidSite', or another alias, but 'Site' is recommended for the sake of simplicity. SolidSite is now ready to go.
+
+Now, run publish the config file, `site.php`, from the command line:
+
+	php artisan vendor:publish
 
 <a name="setting-identifiers"></a>
 ## Setting Sections, Sub Sections, and Titles
@@ -37,6 +43,8 @@ You may use 'SolidSite', or another alias, but 'Site' is recommended for the sak
 	Site::setMulti(array('subSection', 'title'), 'Forum: General');
 
 You can use the SolidSite package to store config items that you'd rather not store anywhere else. SolidSite has a few default identifiers including `section`, `subSection`, `title`, and `titleHeading`. These can be used to highlight menu items in a menu, or for anything else that requires a unique page identifier.
+
+> **Note:** Though the variable names in the config file are snakecase, you may get and set them using camelcase as well.
 
 **Getting any identifier:**
 

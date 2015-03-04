@@ -2,6 +2,6 @@
 
 class Facade extends \Illuminate\Support\Facades\Facade {
 
-	protected static function getFacadeAccessor() { return 'solidsite'; }
+	protected static function getFacadeAccessor() { return 'Regulus\SolidSite\SolidSite'; }
 
 }

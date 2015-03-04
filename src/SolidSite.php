@@ -2,13 +2,13 @@
 
 /*----------------------------------------------------------------------------------------------------------
 	SolidSite
-		A composer package that assigns section name and titles to controller functions and simplifies
-		creation of breadcrumb trails and is useful for other components that require page identifying
-		information such as menus that highlight the current location.
+		A Laravel 5 composer package that assigns section names & titles to pages, simplifies creation of
+		breadcrumb trails, and is useful for other components that require page identifying information
+		such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.5.2
-		last updated on January 26, 2015
+		v0.6.0
+		last updated on March 3, 2015
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -36,11 +36,11 @@ class SolidSite {
 	 *
 	 * @param  string   $item
 	 * @param  mixed    $default
-	 * @return string
+	 * @return mixed
 	 */
 	public function get($item, $default = null)
 	{
-		return Config::get('solid-site::'.$item, $default);
+		return Config::get('site.'.snake_case($item), $default);
 	}
 
 	/**
@@ -48,11 +48,13 @@ class SolidSite {
 	 *
 	 * @param  string   $item
 	 * @param  mixed    $value
-	 * @return void
+	 * @return mixed
 	 */
 	public function set($item, $value = null)
 	{
-		Config::set('solid-site::'.$item, $value);
+		Config::set('site.'.snake_case($item), $value);
+
+		return $value;
 	}
 
 	/**
@@ -88,16 +90,16 @@ class SolidSite {
 	public function title($title = null)
 	{
 		if (is_null($title))
-			$title = $this->get('title');
+			$title = $this->get('title.main');
 
 		$title = strip_tags($title);
 		if (is_null($title) || $title == "") {
 			return $this->get('name');
 		} else {
-			if ($this->get('titleNameInFront'))
-				return $this->get('name').$this->get('titleSeparator').$title;
+			if ($this->get('title.nameInFront'))
+				return $this->get('name').$this->get('title.separator').$title;
 			else
-				return $title.$this->get('titleSeparator').$this->get('name');
+				return $title.$this->get('title.separator').$this->get('name');
 		}
 	}
 
@@ -109,7 +111,7 @@ class SolidSite {
 	 */
 	public function titleHeading($useSiteName = false)
 	{
-		$title = $this->get('titleHeading');
+		$title = $this->get('title.heading');
 		if (is_null($title) || $title == "" || !is_string($title))
 			$title = $this->get('title');
 
@@ -253,7 +255,7 @@ class SolidSite {
 	public function img($path = '', $package = false, $addExtension = true, $useRoot = null)
 	{
 		//if no extension is given, assume .png
-		if ($addExtension && $path != "" && !in_array(File::extension($path), array('png', 'jpg', 'jpeg', 'jpe', 'gif', 'ico', 'svg')))
+		if ($addExtension && $path != "" && !in_array(File::extension($path), ['png', 'jpg', 'jpeg', 'jpe', 'gif', 'ico', 'svg']))
 			$path .= ".png";
 
 		$path = $this->getDirectoryForPath($this->get('imgUri').'/'.$path, $package);
@@ -318,8 +320,8 @@ class SolidSite {
 	 */
 	public function svg($path = '', $package = false)
 	{
-		//if no extension is given, assume .png
-		if ($path != "" && !in_array(File::extension($path), array('svg')))
+		//if no extension is given, add .svg
+		if ($path != "" && File::extension($path) != "svg")
 			$path .= ".svg";
 
 		$svgUri = $this->get('svgUri');
@@ -354,18 +356,22 @@ class SolidSite {
 	 * @param  mixed    $className
 	 * @return string
 	 */
-	public function selectForMatch($item, $itemToCompare, $inClass = false, $className = false)
+	public function selectForMatch($item, $itemToCompare, $inClass = false, $className = null)
 	{
 		$matches = false;
-		if (is_array($itemToCompare)) {
+		if (is_array($itemToCompare))
+		{
 			if (in_array($item, $itemToCompare))
 				$matches = true;
 		} else {
 			if ($item == $itemToCompare)
 				$matches = true;
 		}
-		if ($matches) return $this->selectedHtml($inClass, $className);
-		return '';
+
+		if ($matches)
+			return $this->selectedHtml($inClass, $className);
+
+		return null;
 	}
 
 	/**
@@ -377,9 +383,9 @@ class SolidSite {
 	 * @param  mixed    $className
 	 * @return string
 	 */
-	public function selectBy($type = 'section', $itemToCompare = '', $inClass = false, $className = false)
+	public function selectBy($item = 'section', $itemToCompare = '', $inClass = false, $className = null)
 	{
-		return $this->selectForMatch($this->get($type), $itemToCompare, $inClass, $className);
+		return $this->selectForMatch($this->get($item), $itemToCompare, $inClass, $className);
 	}
 
 	/**
@@ -390,11 +396,14 @@ class SolidSite {
 	 * @param  mixed    $className
 	 * @return string
 	 */
-	public function selectByMulti($comparisonData = array(), $inClass = false, $className = false)
+	public function selectByMulti($comparisonData = array(), $inClass = false, $className = null)
 	{
-		foreach ($comparisonData as $item => $itemToCompare) {
-			if ($this->get($item) != $itemToCompare) return '';
+		foreach ($comparisonData as $item => $itemToCompare)
+		{
+			if ($this->get($item) != $itemToCompare)
+				return null;
 		}
+
 		return $this->selectedHtml($inClass, $className);
 	}
 
@@ -406,15 +415,15 @@ class SolidSite {
 	 * @param  mixed    $className
 	 * @return string
 	 */
-	private function selectedHtml($inClass = false, $className = false)
+	private function selectedHtml($inClass = false, $className = null)
 	{
-		if (!$className || !is_string($className) || $className == "") $className = $this->get('selectedClass');
+		if (!$className || !is_string($className) || $className == "")
+			$className = $this->get('selected_class');
 
-		if ($inClass) {
+		if ($inClass)
 			return ' '.$className;
-		} else {
+		else
 			return ' class="'.$className.'"';
-		}
 	}
 
 	/**

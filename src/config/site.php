@@ -27,13 +27,13 @@ return array(
 	| extension if one is not explicitly specified.
 	|
 	*/
-	'rootUri'    => '',
-	'assetsUri'  => 'assets',
-	'imgUri'     => 'images',
-	'svgUri'     => 'svg',
-	'cssUri'     => 'css',
-	'jsUri'      => 'js',
-	'uploadsUri' => 'uploads',
+	'root_uri'    => '',
+	'assets_uri'  => 'assets',
+	'img_uri'     => 'images',
+	'svg_uri'     => 'svg',
+	'css_uri'     => 'css',
+	'js_uri'      => 'js',
+	'uploads_uri' => 'uploads',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -45,8 +45,8 @@ return array(
 	| elements, especially when used in conjunction with Site::selectBy().
 	|
 	*/
-	'section'    => 'Home',
-	'subSection' => '',
+	'section'     => 'Home',
+	'sub_section' => '',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -55,19 +55,21 @@ return array(
 	|
 	| "title" and "titleHeading" are used to set and display titles. "title"
 	| can be used with Site::title() to set a webpage's title within HTML
-	| title tags. "titleHeading" can be set if the heading on the page needs to
+	| title tags. "heading" can be set if the heading on the page needs to
 	| differ from the title of the web page. The Site::titleHeading() method
-	| will use "title" unless "titleHeading" is set. "titleSeparator" can be
+	| will use "title" unless "heading" is set. "separator" can be
 	| used to separate the website name from the page title. If
-	| "titleNameInFront" is true, the website name will appear in front of the
+	| "name_in_front" is true, the website name will appear in front of the
 	| page title. By default, it is false so Site::title() will place the page
 	| title in front of the website name.
 	|
 	*/
-	'title'            => '',
-	'titleHeading'     => '',
-	'titleSeparator'   => ' :: ',
-	'titleNameInFront' => false,
+	'title' => [
+		'main'          => '',
+		'heading'       => '',
+		'separator'     => ' :: ',
+		'name_in_front' => true,
+	],
 
 	/*
 	|--------------------------------------------------------------------------
@@ -78,7 +80,7 @@ return array(
 	| Site::selectByMulti().
 	|
 	*/
-	'selectedClass' => 'selected',
+	'selected_class' => 'selected',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -88,16 +90,6 @@ return array(
 	| The ID for breadcrumb trails.
 	|
 	*/
-	'trailId' => 'breadcrumb-trail',
-
-	/*
-	|--------------------------------------------------------------------------
-	| Use Root For Assets
-	|--------------------------------------------------------------------------
-	|
-	| Whether or not to use the root URL by default for asset URLs.
-	|
-	*/
-	'useRootForAssets' => true,
+	'trail_id' => 'breadcrumb-trail',
 
 );

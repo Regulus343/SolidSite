@@ -18,7 +18,9 @@ class SolidSiteServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('regulus/solid-site');
+		$this->publishes([
+			__DIR__.'/config/site.php' => config_path('site.php'),
+		]);
 	}
 
 	/**
@@ -28,7 +30,8 @@ class SolidSiteServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->bind('solidsite', function() {
+		$this->app->singleton('Regulus\SolidSite\SolidSite', function()
+		{
 			return new SolidSite;
 		});
 	}
