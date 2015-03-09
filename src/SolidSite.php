@@ -174,37 +174,25 @@ class SolidSite {
 	}
 
 	/**
-	 * Get the assets directory URI.
+	 * Get the assets directory path.
 	 *
+	 * @param  string   $path
+	 * @param  boolean  $fromAppDir
 	 * @return string
 	 */
-	public function getAssetsUri()
+	public function assetsPath($relativePath = '', $fromAppDir = false)
 	{
-		$uri = $this->get('rootUri');
+		$path = ($fromAppDir ? public_path() : $this->get('rootPath'));
 
-		if (is_null($uri) || $uri == "" || !$uri)
-			$uri = $this->get('assetsUri');
+		if (is_null($path) || $path == "" || !$path)
+			$path = $this->get('assetsPath');
 		else
-			$uri .= '/'.$this->get('assetsUri');
+			$path .= '/'.$this->get('assetsPath');
 
-		return $uri;
-	}
+		if (!is_null($relativePath) && $relativePath != "" && $relativePath)
+			$path .= '/'.$relativePath;
 
-	/**
-	 * Get the packages directory URI.
-	 *
-	 * @return string
-	 */
-	public function getPackagesUri()
-	{
-		$uri = $this->get('rootUri');
-
-		if (is_null($uri) || $uri == "" || !$uri)
-			$uri = 'packages';
-		else
-			$uri .= '/packages';
-
-		return $uri;
+		return str_replace('//', '/', $path);
 	}
 
 	/**
@@ -217,9 +205,9 @@ class SolidSite {
 	public function getDirectoryForPath($path = '', $package = false)
 	{
 		if ($package)
-			$path = $this->getPackagesUri().'/'.$package.'/'.$path;
+			$path = $this->assetsPath().'/'.$package.'/'.$path;
 		else
-			$path = $this->getAssetsUri().'/'.$path;
+			$path = $this->assetsPath().'/'.$path;
 
 		return $path;
 	}
@@ -258,12 +246,26 @@ class SolidSite {
 		if ($addExtension && $path != "" && !in_array(File::extension($path), ['png', 'jpg', 'jpeg', 'jpe', 'gif', 'ico', 'svg']))
 			$path .= ".png";
 
-		$path = $this->getDirectoryForPath($this->get('imgUri').'/'.$path, $package);
+		$path = $this->getDirectoryForPath($this->get('imgPath').'/'.$path, $package);
 
 		if (is_null($useRoot))
 			$useRoot = $this->get('useRoot');
 
 		return $useRoot ? $this->rootUrl($path) : $this->url($path, true);
+	}
+
+	/**
+	 * Alias for img() method.
+	 *
+	 * @param  string   $path
+	 * @param  mixed    $package
+	 * @param  string   $addExtension
+	 * @param  mixed    $useRoot
+	 * @return string
+	 */
+	public function image($path = '', $package = false, $addExtension = true, $useRoot = null)
+	{
+		return $this->img($path, $package, $addExtension, $useRoot);
 	}
 
 	/**
@@ -280,7 +282,7 @@ class SolidSite {
 		if ($path != "" && File::extension($path) != "css")
 			$path .= ".css";
 
-		$path = $this->getDirectoryForPath($this->get('cssUri').'/'.$path, $package);
+		$path = $this->getDirectoryForPath($this->get('cssPath').'/'.$path, $package);
 
 		if (is_null($useRoot))
 			$useRoot = $this->get('useRoot');
@@ -303,7 +305,7 @@ class SolidSite {
 		if ($path != "" && File::extension($path) != "js")
 			$path .= ".js";
 
-		$path = $this->getDirectoryForPath($this->get('jsUri').'/'.$path, $package);
+		$path = $this->getDirectoryForPath($this->get('jsPath').'/'.$path, $package);
 
 		if (is_null($useRoot))
 			$useRoot = $this->get('useRoot');
@@ -324,11 +326,11 @@ class SolidSite {
 		if ($path != "" && File::extension($path) != "svg")
 			$path .= ".svg";
 
-		$svgUri = $this->get('svgUri');
-		if ($svgUri != "" && $svgUri != false && !is_null($svgUri))
-			$path = $svgUri.'/'.$path;
+		$svgPath = $this->get('svgPath');
+		if ($svgPath != "" && $svgPath != false && !is_null($svgPath))
+			$path = $svgPath.'/'.$path;
 
-		$path = $this->getDirectoryForPath($this->get('imgUri').'/'.$path, $package);
+		$path = $this->getDirectoryForPath($this->get('imgPath').'/'.$path, $package);
 
 		if (is_file($path))
 			return file_get_contents($path);
@@ -344,7 +346,7 @@ class SolidSite {
 	 */
 	public function uploadedFile($path = '')
 	{
-		return $this->rootUrl($this->get('uploadsUri').'/'.$path);
+		return $this->rootUrl($this->get('uploadsPath').'/'.$path);
 	}
 
 	/**

@@ -18,22 +18,28 @@ return [
 	| Assets, Image, SVG, CSS, JS, and Uploads Paths
 	|--------------------------------------------------------------------------
 	|
-	| The URI variables can be used to easily load assets using Site::asset(),
+	| The path variables can be used to easily load assets using Site::asset(),
 	| Site::img(), Site::css(), Site::js(), Site::svg(), and
-	| Site::uploadedFile() to create URLS for your assets. "img_uri", "css_uri",
-	| "js_uri", and "uploads_uri" will be appended to the end of "assets_uri", so
-	| by default Site::img('image-name') would create a URL of
-	| http:://website.com/assets/img/image-name.png ("png" being the assumed
-	| extension if one is not explicitly specified).
+	| Site::uploadedFile() to create URLS for your assets. "img_path",
+	| "css_path", "js_path", and "uploads_path" will be appended to the end of
+	| "assets_path", so by default Site::img('image-name') would create a URL
+	| of http:://website.com/assets/images/image-name.png ("png" being the
+	| assumed extension if one is not explicitly specified).
+	|
+	| The "public_path" variable is the relative path from your application
+	| directory to the public directory. This is used in conjunction with the
+	| Application class in case you wish to use a different directory structure
+	| than Laravel 5's default.
 	|
 	*/
-	'root_uri'    => '',
-	'assets_uri'  => 'assets',
-	'img_uri'     => 'images',
-	'svg_uri'     => 'svg',
-	'css_uri'     => 'css',
-	'js_uri'      => 'js',
-	'uploads_uri' => 'uploads',
+	'public_path'  => 'public',
+	'root_path'    => '',
+	'assets_path'  => 'assets',
+	'img_path'     => 'images',
+	'svg_path'     => 'svg',
+	'css_path'     => 'css',
+	'js_path'      => 'js',
+	'uploads_path' => 'uploads',
 
 	/*
 	|--------------------------------------------------------------------------

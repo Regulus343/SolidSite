@@ -9,7 +9,7 @@ class SolidSiteServiceProvider extends ServiceProvider {
 	 *
 	 * @var bool
 	 */
-	protected $defer = false;
+	protected $defer = true;
 
 	/**
 	 * Bootstrap the application events.
@@ -43,7 +43,7 @@ class SolidSiteServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return ['Regulus\SolidSite\SolidSite'];
 	}
 
 }
