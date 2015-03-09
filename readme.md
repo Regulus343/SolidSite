@@ -34,6 +34,20 @@ Now, run publish the config file, `site.php`, from the command line:
 
 	php artisan vendor:publish
 
+You may also use SolidSite's built-in extension of Laravel 5's `Illuminate\Foundation\Application` class in case you would like to modify the `public` directory to something else such as `public_html` or even `../public_html` if you place your Laravel 5 application inside another directory. SolidSite's own `Application` class allows you to set the `public_path` in `config/site.php` to restore this ability. If you would like to use it, replace this code in `bootstrap/app.php`:
+
+	$app = new Illuminate\Foundation\Application(
+		realpath(__DIR__.'/../')
+	);
+
+With this:
+
+	$app = new Regulus\SolidSite\Application(
+		realpath(__DIR__.'/../')
+	);
+
+This is, however, entirely optional. If you choose not to use it, you may still get SolidSite's configured public path using `Site::publicPath()`.
+
 <a name="setting-identifiers"></a>
 ## Setting Sections, Sub Sections, and Titles
 

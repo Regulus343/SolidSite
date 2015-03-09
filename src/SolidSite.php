@@ -174,6 +174,16 @@ class SolidSite {
 	}
 
 	/**
+	 * Get the path to the public / web directory.
+	 *
+	 * @return string
+	 */
+	public function publicPath()
+	{
+		return base_path().DIRECTORY_SEPARATOR.config('site.public_path');
+	}
+
+	/**
 	 * Get the assets directory path.
 	 *
 	 * @param  string   $path
