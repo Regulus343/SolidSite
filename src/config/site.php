@@ -7,11 +7,14 @@ return [
 	| Website Name and Webmaster Email
 	|--------------------------------------------------------------------------
 	|
-	| The name and webmaster email address for the website.
+	| The name and webmaster email address for the website. If the email does
+	| not contain the "@" character, "@website.com" will be appended to it when
+	| using the email() method. The URL is based on the "url" config variable
+	| in config/app.php.
 	|
 	*/
 	'name'  => 'Website Name',
-	'email' => 'admin@localhost',
+	'email' => 'webmaster',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -59,9 +62,9 @@ return [
 	| Title
 	|--------------------------------------------------------------------------
 	|
-	| "title" and "titleHeading" are used to set and display titles. "title"
-	| can be used with Site::title() to set a webpage's title within HTML
-	| title tags. "heading" can be set if the heading on the page needs to
+	| "title.main" and "title.heading" are used to set and display titles.
+	| "title" can be used with Site::title() to set a webpage's title within
+	| HTML title tags. "heading" can be set if the heading on the page needs to
 	| differ from the title of the web page. The Site::titleHeading() method
 	| will use "title" unless "heading" is set. "separator" can be
 	| used to separate the website name from the page title. If
@@ -74,7 +77,7 @@ return [
 		'main'          => '',
 		'heading'       => '',
 		'separator'     => ' :: ',
-		'name_in_front' => true,
+		'name_in_front' => false,
 	],
 
 	/*

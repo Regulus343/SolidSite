@@ -54,27 +54,39 @@ This is, however, entirely optional. If you choose not to use it, you may still 
 **Setting identifiers:**
 
 	Site::set('section', 'Forum');
-	Site::setMulti(array('subSection', 'title'), 'Forum: General');
+	Site::setMulti(array('subSection', 'title.main'), 'Forum: General');
 
 You can use the SolidSite package to store config items that you'd rather not store anywhere else. SolidSite has a few default identifiers including `section`, `subSection`, `title`, and `titleHeading`. These can be used to highlight menu items in a menu, or for anything else that requires a unique page identifier.
 
 > **Note:** Though the variable names in the config file are snakecase, you may get and set them using camelcase as well.
 
-**Getting any identifier:**
+**Getting identifiers:**
 
 	Site::get('section');
+
+**Setting the page title:**
+
+	Site::setTitle('Title');
+
+	Site::set('title.main', 'Title');
 
 **Getting the page title:**
 
 	Site::title();
 
-This will return the `title` config item along with the `name` config item (the name of your website) or just the `name` config item if a title is not set.
+This will return the `title.main` config item along with the `name` config item (the name of your website) or just the `name` config item if a title is not set.
 
-**Getting the heading title:**
+**Setting the page heading:**
 
-	Site::titleHeading();
+	Site::setHeading('Heading');
 
-This will return the `titleHeading` config item or the `title` config item if a heading title is not set. This can be used in cases where you want to make the heading of the page different from what is in the web page's `title` tag.
+	Site::set('title.heading', 'Heading');
+
+**Getting the page heading:**
+
+	Site::heading();
+
+This will return the `title.heading` config item or the `title` config item if a heading title is not set. This can be used in cases where you want to make the heading of the page different from what is in the web page's `title` tag.
 
 <a name="highlighting-menu-items"></a>
 ## Highlighting Menu Items Based on Section and Sub Section

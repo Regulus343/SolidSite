@@ -20,7 +20,10 @@ class SolidSiteServiceProvider extends ServiceProvider {
 	{
 		$this->publishes([
 			__DIR__.'/config/site.php' => config_path('site.php'),
+			__DIR__.'/assets'          => assets_path('regulus/solid-site'),
 		]);
+
+		$this->loadViewsFrom(__DIR__.'/views', 'solid-site');
 	}
 
 	/**

@@ -82,6 +82,21 @@ class SolidSite {
 	}
 
 	/**
+	 * Get the website email.
+	 *
+	 * @return string
+	 */
+	public function email()
+	{
+		$email = $this->get('email');
+
+		if (strpos($email, '@') === false)
+			$email .= '@'.config('app.url');
+
+		return $email;
+	}
+
+	/**
 	 * Get the title for a web page's title tag.
 	 *
 	 * @param  mixed    $title
@@ -109,7 +124,7 @@ class SolidSite {
 	 * @param  boolean  $useSiteName
 	 * @return string
 	 */
-	public function titleHeading($useSiteName = false)
+	public function heading($useSiteName = false)
 	{
 		$title = $this->get('title.heading');
 		if (is_null($title) || $title == "" || !is_string($title))
@@ -125,6 +140,34 @@ class SolidSite {
 			$title = Format::entities($title);
 
 		return $title;
+	}
+
+	/**
+	 * Set the page title.
+	 *
+	 * @param  string   $item
+	 * @param  mixed    $value
+	 * @return mixed
+	 */
+	public function setTitle($value = null)
+	{
+		$this->set('site.title.main', $value);
+
+		return $value;
+	}
+
+	/**
+	 * Set the page heading.
+	 *
+	 * @param  string   $item
+	 * @param  mixed    $value
+	 * @return mixed
+	 */
+	public function setHeading($value = null)
+	{
+		$this->set('site.title.heading', $value);
+
+		return $value;
 	}
 
 	/**
