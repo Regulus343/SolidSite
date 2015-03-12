@@ -151,7 +151,7 @@ class SolidSite {
 	 */
 	public function setTitle($value = null)
 	{
-		$this->set('site.title.main', $value);
+		$this->set('title.main', $value);
 
 		return $value;
 	}
@@ -165,7 +165,7 @@ class SolidSite {
 	 */
 	public function setHeading($value = null)
 	{
-		$this->set('site.title.heading', $value);
+		$this->set('title.heading', $value);
 
 		return $value;
 	}
