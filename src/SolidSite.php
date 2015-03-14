@@ -127,8 +127,9 @@ class SolidSite {
 	public function heading($useSiteName = false)
 	{
 		$title = $this->get('title.heading');
+
 		if (is_null($title) || $title == "" || !is_string($title))
-			$title = $this->get('title');
+			$title = $this->get('title.main');
 
 		if ((is_null($title) || $title == "" || !is_string($title)) && $useSiteName)
 			$title = $this->name();
