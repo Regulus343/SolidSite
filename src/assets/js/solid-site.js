@@ -61,14 +61,20 @@ var SolidSite = {
 		return $.ajax(this.prepConfig(config));
 	},
 
-	get: function(config)
+	get: function(url, data, success, dataType)
 	{
-		return $.get(this.prepConfig(config));
+		if (data !== undefined && data['_token'] === undefined)
+			data = this.prepData(data);
+
+		return $.get(url, data, success, dataType);
 	},
 
-	post: function(config)
+	post: function(url, data, success, dataType)
 	{
-		return $.post(this.prepConfig(config));
+		if (data !== undefined && data['_token'] === undefined)
+			data = this.prepData(data);
+
+		return $.post(url, data, success, dataType);
 	},
 
 }
