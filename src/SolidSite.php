@@ -8,7 +8,7 @@
 
 		created by Cody Jassman
 		v0.6.0
-		last updated on March 3, 2015
+		last updated on March 14, 2015
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
