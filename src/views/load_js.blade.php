@@ -8,6 +8,8 @@
 
 	$(document).ready(function()
 	{
+		SolidSite.setUrl('{{ config('app.url') }}');
+
 		SolidSite.setCsrfToken('{{ Session::token() }}');
 	});
 
