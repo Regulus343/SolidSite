@@ -8,7 +8,7 @@
 
 		created by Cody Jassman
 		v0.6.0
-		last updated on March 14, 2015
+		last updated on March 19, 2015
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -637,7 +637,7 @@ class SolidSite {
 	/**
 	 * Create HTML for button list.
 	 *
-	 * @param  mixed    $class
+	 * @param  string   $class
 	 * @return string
 	 */
 	public function getButtonListMarkup($class = 'button-group')
@@ -662,7 +662,7 @@ class SolidSite {
 				}
 
 				if (!is_null($button->class))
-					$html .= ' class="'.$class.'"';
+					$html .= ' class="'.$button->class.'"';
 				else
 					$html .= ' class="btn btn-default"';
 
@@ -672,7 +672,18 @@ class SolidSite {
 				$html .= '>';
 
 				if (!is_null($button->icon))
-					$html .= '<span class="'.$button->icon.'"></span> ';
+				{
+					$iconElement     = config('html.icon.element');
+					$iconClassPrefix = config('html.icon.class_prefix');
+
+					if (is_null($iconElement))
+						$iconElement = "i";
+
+					if (is_null($iconClassPrefix))
+						$iconClassPrefix = "fa fa-";
+
+					$html .= '<'.$iconElement.' class="'.$iconClassPrefix.$button->icon.'"></'.$iconElement.'> ';
+				}
 
 				$html .= Format::entities($button->label).'</'.$tag.'>'."\n";
 			}
