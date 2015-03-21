@@ -13,7 +13,6 @@
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
@@ -187,7 +186,7 @@ class SolidSite {
 
 		$url = URL::to($uri);
 
-		$baseUrl = str_replace('https://', '', str_replace('http://', '', Config::get('app.url')));
+		$baseUrl = str_replace('https://', '', str_replace('http://', '', config('app.url')));
 
 		if ($subdomain !== true)
 		{
