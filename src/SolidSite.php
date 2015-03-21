@@ -8,7 +8,7 @@
 
 		created by Cody Jassman
 		v0.6.0
-		last updated on March 19, 2015
+		last updated on March 20, 2015
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -66,7 +66,8 @@ class SolidSite {
 	 */
 	public function setMulti($items = array(), $value = null)
 	{
-		foreach ($items as $item) {
+		foreach ($items as $item)
+		{
 			$this->set($item, $value);
 		}
 	}
@@ -190,10 +191,10 @@ class SolidSite {
 
 		if ($subdomain !== true)
 		{
-			//remove subdomain if one exists
+			// remove subdomain if one exists
 			$url = preg_replace('/(http[s]?:\/\/)[A-Za-z0-9]*[\.]?('.str_replace('.', '\.', $baseUrl).')/', '${1}${2}', $url);
 
-			//add subdomain if one is set
+			// add subdomain if one is set
 			if ($subdomain != "" && $subdomain !== false && !is_null($subdomain))
 				$url = preg_replace('/(http[s]?:\/\/)('.str_replace('.', '\.', $baseUrl).')/', '${1}'.$subdomain.'.${2}', $url);
 		}
@@ -296,7 +297,7 @@ class SolidSite {
 	 */
 	public function img($path = '', $package = false, $addExtension = true, $useRoot = null)
 	{
-		//if no extension is given, assume .png
+		// if no extension is given, assume .png
 		if ($addExtension && $path != "" && !in_array(File::extension($path), ['png', 'jpg', 'jpeg', 'jpe', 'gif', 'ico', 'svg']))
 			$path .= ".png";
 
@@ -332,7 +333,7 @@ class SolidSite {
 	 */
 	public function css($path = '', $package = false, $useRoot = null)
 	{
-		//add .css extension if one doesn't exist
+		// add .css extension if one doesn't exist
 		if ($path != "" && File::extension($path) != "css")
 			$path .= ".css";
 
@@ -355,7 +356,7 @@ class SolidSite {
 	 */
 	public function js($path = '', $package = false, $addExtension = true, $useRoot = null)
 	{
-		//add .js extension if one doesn't exist
+		// add .js extension if one doesn't exist
 		if ($path != "" && File::extension($path) != "js")
 			$path .= ".js";
 
@@ -376,7 +377,7 @@ class SolidSite {
 	 */
 	public function svg($path = '', $package = false)
 	{
-		//if no extension is given, add .svg
+		// if no extension is given, add .svg
 		if ($path != "" && File::extension($path) != "svg")
 			$path .= ".svg";
 
@@ -712,7 +713,8 @@ class SolidSite {
 	public function developer()
 	{
 		$developer = Session::get('developer');
-		return !is_null($developer) && $developer ? true : false;
+
+		return !is_null($developer) && $developer;
 	}
 
 }
