@@ -4,7 +4,7 @@
 |--------------------------------------------------------------------------
 | Helper Functions
 |--------------------------------------------------------------------------
-|
+|s
 | A number of helper functions are available for various things.
 |
 */
@@ -21,7 +21,7 @@ if ( ! function_exists('assets_path'))
 	 */
 	function assets_path($path = '', $fromAppDir = true)
 	{
-		return \Site::assetsPath($path, $fromAppDir);
+		return \Regulus\SolidSite\Facade::assetsPath($path, $fromAppDir);
 	}
 }
 
@@ -38,6 +38,6 @@ if ( ! function_exists('asset_url'))
 	 */
 	function asset_url($path = '', $secure = false, $package = false, $useRoot = null)
 	{
-		return \Site::asset($path, $secure, $package, $useRoot);
+		return \Regulus\SolidSite\Facade::asset($path, $secure, $package, $useRoot);
 	}
 }
