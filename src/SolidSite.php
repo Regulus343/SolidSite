@@ -16,8 +16,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
-use Regulus\TetraText\Facade as Format;
-
 class SolidSite {
 
 	/**
@@ -138,7 +136,7 @@ class SolidSite {
 			$title = "";
 
 		if (strip_tags($title) == $title)
-			$title = Format::entities($title);
+			$title = $this->entities($title);
 
 		return $title;
 	}
@@ -558,9 +556,9 @@ class SolidSite {
 					else
 						$url = URL::to($item->uri);
 
-					$html .= '<a href="'.$url.'">'.Format::entities($item->title).'</a>';
+					$html .= '<a href="'.$url.'">'.$this->entities($item->title).'</a>';
 				} else {
-					$html .= Format::entities($item->title);
+					$html .= $this->entities($item->title);
 				}
 
 				$html .= '</li>'."\n";
@@ -685,7 +683,7 @@ class SolidSite {
 					$html .= '<'.$iconElement.' class="'.$iconClassPrefix.$button->icon.'"></'.$iconElement.'> ';
 				}
 
-				$html .= Format::entities($button->label).'</'.$tag.'>'."\n";
+				$html .= $this->entities($button->label).'</'.$tag.'>'."\n";
 			}
 
 			$html .= '</div>'."\n";
@@ -714,6 +712,24 @@ class SolidSite {
 		$developer = Session::get('developer');
 
 		return !is_null($developer) && $developer;
+	}
+
+	/**
+	 * Convert HTML characters to entities.
+	 *
+	 * The encoding specified in the application configuration file will be used.
+	 *
+	 * @param  string  $value
+	 * @return string
+	 */
+	public function entities($value)
+	{
+		$encoding = config('format.encoding');
+
+		if (is_null($encoding))
+			$encoding = "UTF-8";
+
+		return htmlentities($value, ENT_QUOTES, config('format.encoding'), false);
 	}
 
 }
