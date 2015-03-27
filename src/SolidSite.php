@@ -8,7 +8,7 @@
 
 		created by Cody Jassman
 		v0.6.0
-		last updated on March 23, 2015
+		last updated on March 26, 2015
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -659,10 +659,10 @@ class SolidSite {
 						$html .= ' href="'.$button->url.'" target="_blank"';
 				}
 
-				if (!is_null($button->class))
-					$html .= ' class="'.$button->class.'"';
-				else
-					$html .= ' class="btn btn-default"';
+				if (is_null($button->class))
+					$button->class = "btn btn-default";
+
+				$html .= ' class="'.$button->class.(!is_null($button->icon) && $button->label != "" ? ' icon' : '').'"';
 
 				if (!is_null($button->id))
 					$html .= ' id="'.$id.'"';
