@@ -65,12 +65,12 @@ return [
 	| "title.main" and "title.heading" are used to set and display titles.
 	| "title" can be used with Site::title() to set a webpage's title within
 	| HTML title tags. "heading" can be set if the heading on the page needs to
-	| differ from the title of the web page. The Site::titleHeading() method
-	| will use "title" unless "heading" is set. "separator" can be
-	| used to separate the website name from the page title. If
-	| "name_in_front" is true, the website name will appear in front of the
-	| page title. By default, it is false so Site::title() will place the page
-	| title in front of the website name.
+	| differ from the title of the web page. The Site::heading() method will
+	| use "title" unless "heading" is set. "separator" can be used to separate
+	| the website name from the page title. If "name_in_front" is true, the
+	| website name will appear in front of the page title. By default, it is
+	| false so Site::title() will place the page title in front of the
+	| website name.
 	|
 	*/
 	'title' => [
