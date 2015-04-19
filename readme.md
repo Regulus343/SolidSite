@@ -17,7 +17,7 @@ SolidSite
 To install SolidSite, make sure "regulus/solid-site" has been added to Laravel 5's `composer.json` file.
 
 	"require": {
-		"regulus/solid-site": "dev-master"
+		"regulus/solid-site": "0.6.*"
 	},
 
 Then run `php composer.phar update` from the command line. Composer will install the SolidSite package. Now, all you have to do is register the service provider and set up SolidSite's alias in `config/app.php`. Add this to the `providers` array:
