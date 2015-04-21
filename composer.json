@@ -22,6 +22,5 @@
 		"psr-4": {
 			"Regulus\\SolidSite\\": "src/"
 		}
-	},
-	"minimum-stability": "stable"
+	}
 }
