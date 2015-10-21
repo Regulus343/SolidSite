@@ -7,8 +7,8 @@
 		such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.6.0
-		last updated on March 26, 2015
+		v0.6.1
+		last updated on October 20, 2015
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
