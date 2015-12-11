@@ -1,12 +1,11 @@
 <?php namespace Regulus\SolidSite;
 
-class Application extends \Illuminate\Foundation\Application
-{
+class Application extends \Illuminate\Foundation\Application {
 
 	/**
-	 * The state array for the currently logged in user.
+	 * The relative path to the public directory from the application directory.
 	 *
-	 * @var    array
+	 * @var    mixed
 	 */
 	protected $publicPath = null;
 
