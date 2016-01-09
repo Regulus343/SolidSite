@@ -7,8 +7,8 @@
 		such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.6.1
-		last updated on October 20, 2015
+		v0.6.2
+		last updated on January 8, 2016
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -142,6 +142,34 @@ class SolidSite {
 	}
 
 	/**
+	 * Get the sub-heading title. If no specific sub-heading title is set, the main heading or regular title is used.
+	 *
+	 * @param  boolean  $useSiteName
+	 * @return string
+	 */
+	public function subHeading($useSiteName = false)
+	{
+		$title = $this->get('title.subHeading');
+
+		if (is_null($title) || $title == "" || !is_string($title))
+			$title = $this->get('title.heading');
+
+		if (is_null($title) || $title == "" || !is_string($title))
+			$title = $this->get('title.main');
+
+		if ((is_null($title) || $title == "" || !is_string($title)) && $useSiteName)
+			$title = $this->name();
+
+		if (!is_string($title))
+			$title = "";
+
+		if (strip_tags($title) == $title)
+			$title = $this->entities($title);
+
+		return $title;
+	}
+
+	/**
 	 * Set the page title.
 	 *
 	 * @param  string   $item
@@ -165,6 +193,20 @@ class SolidSite {
 	public function setHeading($value = null)
 	{
 		$this->set('title.heading', $value);
+
+		return $value;
+	}
+
+	/**
+	 * Set the page sub-heading.
+	 *
+	 * @param  string   $item
+	 * @param  mixed    $value
+	 * @return mixed
+	 */
+	public function setSubHeading($value = null)
+	{
+		$this->set('title.subHeading', $value);
 
 		return $value;
 	}

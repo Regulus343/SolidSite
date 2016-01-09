@@ -3,7 +3,7 @@
 | SolidSite JS
 |------------------------------------------------------------------------------
 |
-| Last Updated: March 13, 2015
+| Last Updated: January 8, 2016
 |
 */
 
@@ -30,6 +30,10 @@ var SolidSite = {
 
 	setCsrfToken: function(csrfToken)
 	{
+		$.ajaxSetup({
+			headers: {'X-CSRF-TOKEN': csrfToken}
+		});
+
 		return this.csrfToken = csrfToken;
 	},
 
@@ -77,4 +81,4 @@ var SolidSite = {
 		return $.post(url, data, success, dataType);
 	},
 
-}
+};
