@@ -7,8 +7,8 @@
 		such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.6.2
-		last updated on January 8, 2016
+		v0.6.3
+		last updated on February 6, 2016
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -276,7 +276,7 @@ class SolidSite {
 	 */
 	public function assetsPath($relativePath = '', $fromAppDir = false)
 	{
-		$path = ($fromAppDir ? public_path() : $this->get('rootPath'));
+		$path = ($fromAppDir ? $this->publicPath() : $this->get('rootPath'));
 
 		if (is_null($path) || $path == "" || !$path)
 			$path = $this->get('assetsPath');
