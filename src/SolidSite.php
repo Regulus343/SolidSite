@@ -8,7 +8,7 @@
 
 		created by Cody Jassman
 		v0.6.3
-		last updated on February 6, 2016
+		last updated on February 7, 2016
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -310,12 +310,11 @@ class SolidSite {
 	 * Create a URL for an asset.
 	 *
 	 * @param  string   $path
-	 * @param  boolean  $secure
 	 * @param  mixed    $package
 	 * @param  mixed    $useRoot
 	 * @return string
 	 */
-	public function asset($path = '', $secure = false, $package = false, $useRoot = null)
+	public function asset($path = '', $package = false, $useRoot = null)
 	{
 		$path = $this->getDirectoryForPath($path, $package);
 
