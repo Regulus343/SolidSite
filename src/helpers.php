@@ -4,12 +4,12 @@
 |--------------------------------------------------------------------------
 | Helper Functions
 |--------------------------------------------------------------------------
-|s
+|
 | A number of helper functions are available for various things.
 |
 */
 
-if ( ! function_exists('assets_path'))
+if (!function_exists('assets_path'))
 {
 	/**
 	 * Get a language item from language arrays.
@@ -25,7 +25,7 @@ if ( ! function_exists('assets_path'))
 	}
 }
 
-if ( ! function_exists('asset_url'))
+if (!function_exists('asset_url'))
 {
 	/**
 	 * Create a URL for an asset.

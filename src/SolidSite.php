@@ -7,8 +7,8 @@
 		such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.6.3
-		last updated on February 7, 2016
+		v0.6.4
+		last updated on April 14, 2016
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -439,7 +439,12 @@ class SolidSite {
 	 */
 	public function uploadedFile($path = '')
 	{
-		return $this->rootUrl($this->get('uploadsPath').'/'.$path);
+		$uploadsPath = $this->get('uploadsPath');
+
+		if (substr($path, 0, strlen($uploadsPath)) != $uploadsPath)
+			$path = $uploadsPath.'/'.$path;
+
+		return $this->rootUrl($path);
 	}
 
 	/**
