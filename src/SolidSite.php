@@ -7,8 +7,8 @@
 		such as menus that highlight the current location.
 
 		created by Cody Jassman
-		v0.6.4
-		last updated on April 14, 2016
+		v0.6.5
+		last updated on April 25, 2016
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -106,9 +106,18 @@ class SolidSite {
 			$title = $this->get('title.main');
 
 		$title = strip_tags($title);
-		if (is_null($title) || $title == "") {
+
+		if (is_null($title) || $title == "")
+		{
 			return $this->get('name');
-		} else {
+		}
+		else
+		{
+			$titlePrefix = $this->get('title.prefix');
+
+			if (!is_null($titlePrefix))
+				$title = $titlePrefix.': '.$title;
+
 			if ($this->get('title.nameInFront'))
 				return $this->get('name').$this->get('title.separator').$title;
 			else
@@ -137,6 +146,11 @@ class SolidSite {
 
 		if (strip_tags($title) == $title)
 			$title = $this->entities($title);
+
+		$titlePrefix = $this->get('title.prefixHeading');
+
+		if (!is_null($titlePrefix) && $title != "")
+			$title = $titlePrefix.': '.$title;
 
 		return $title;
 	}
@@ -167,6 +181,24 @@ class SolidSite {
 			$title = $this->entities($title);
 
 		return $title;
+	}
+
+	/**
+	 * Set the page title prefix.
+	 *
+	 * @param  string   $item
+	 * @param  mixed    $value
+	 * @param  boolean  $setForHeading
+	 * @return mixed
+	 */
+	public function setTitlePrefix($value = null, $setForHeading = false)
+	{
+		$this->set('title.prefix', $value);
+
+		if ($setForHeading)
+			$this->set('title.prefixHeading', $value);
+
+		return $value;
 	}
 
 	/**
@@ -230,12 +262,14 @@ class SolidSite {
 
 		if ($subdomain !== true)
 		{
+			$escapedBaseUrl = str_replace('.', '\.', str_replace('/', '\/', str_replace('-', '\-', str_replace('~', '\~', $baseUrl))));
+
 			// remove subdomain if one exists
-			$url = preg_replace('/(http[s]?:\/\/)[A-Za-z0-9]*[\.]?('.str_replace('.', '\.', $baseUrl).')/', '${1}${2}', $url);
+			$url = preg_replace('/(http[s]?:\/\/)[A-Za-z0-9]*[\.]?('.$escapedBaseUrl.')/', '${1}${2}', $url);
 
 			// add subdomain if one is set
 			if ($subdomain != "" && $subdomain !== false && !is_null($subdomain))
-				$url = preg_replace('/(http[s]?:\/\/)('.str_replace('.', '\.', $baseUrl).')/', '${1}'.$subdomain.'.${2}', $url);
+				$url = preg_replace('/(http[s]?:\/\/)('.$escapedBaseUrl.')/', '${1}'.$subdomain.'.${2}', $url);
 		}
 
 		if ($secure)

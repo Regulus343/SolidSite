@@ -3,8 +3,6 @@ SolidSite
 
 **A Laravel 5 composer package that assigns section names & titles to pages, simplifies creation of breadcrumb trails, and is useful for other components that require page identifying information such as menus that highlight the current location.**
 
-> **Note:** For Laravel 4, you may use <a href="https://github.com/Regulus343/SolidSite/tree/v0.5.2">version 0.5.2</a>.
-
 - [Installation](#installation)
 - [Setting Sections, Sub Sections, and Titles](#setting-identifiers)
 - [Highlighting Menu Items Based on Section and Sub Section](#highlighting-menu-items)
@@ -88,6 +86,14 @@ This will return the `title.main` config item along with the `name` config item 
 
 This will return the `title.heading` config item or the `title` config item if a heading title is not set. This can be used in cases where you want to make the heading of the page different from what is in the web page's `title` tag.
 
+**Setting the page title prefix:**
+
+	Site::setTitlePrefix('Forum'); // set a prefix only for the document title itself
+
+	Site::setTitlePrefix('Forum', true); // set a prefix for the document title as well as the page heading
+
+This will allow you to set a title prefix, which can be useful in controller `__constructor()` methods to set a prefix for the titles of all pages within a controller. The above example paired with `Site::setTitle('Sections')` would lead to a fully qualified title such as `Forum: Sections :: Website Name`. If the second parameter was not set to `true`, the heading would be simply `Sections`. If it is true, the heading would be `Forum: Sections`.
+
 <a name="highlighting-menu-items"></a>
 ## Highlighting Menu Items Based on Section and Sub Section
 
@@ -133,27 +139,25 @@ If successful, a class will be added to the menu list item. The default class is
 
 	echo Site::img('logo.png');
 
+	echo Site::img('logo'); // if no extension is provided, ".png" is assumed
+
 **Create a CSS asset URL:**
 
 	echo Site::css('styles.css');
+
+	echo Site::css('styles'); // if no extension is provided, ".css" is assumed
 
 **Create a JavaScript asset URL:**
 
 	echo Site::js('jquery.js');
 
+	echo Site::js('jquery'); // if no extension is provided, ".js" is assumed
+
 **Create an uploaded file URL:**
 
-	echo Site::uploadedFile('user_images/1.png');
+	echo Site::uploadedFile('users/1.png');
 
 The asset URLs methods should help to shorten markup and make your views cleaner. You can customize the directories for each of the asset types in `config.php` according to your preferences.
-
-For `img()`, `css()`, and `js()`, you are not required to add an extension. For the image method, `.png` will be the assumed extension if you leave it out:
-
-	echo Site::img('logo');   //automatically adds ".png"
-
-	echo Site::css('styles'); //automatically adds ".css"
-
-	echo Site::js('jquery');  //automatically adds ".js"
 
 <a name="creating-breadcrumb-trail"></a>
 ## Creating a Breadcrumb Trail
