@@ -30,16 +30,18 @@ return [
 	|
 	| The path variables can be used to easily load assets using Site::asset(),
 	| Site::img(), Site::css(), Site::js(), Site::svg(), and
-	| Site::uploadedFile() to create URLS for your assets. "img",
-	| "css", "js", and "uploads" will be appended to the end of
-	| "assets", so by default Site::img('image-name') would create a URL
-	| of http:://website.com/assets/images/image-name.png ("png" being the
+	| Site::uploadedFile() to create URLS for your assets. "images", "css",
+	| "js", and "uploads" will be appended to the end of "assets", so by
+	| default Site::img('image-name') would create a URL of
+	| http:://website.com/assets/images/image-name.png ("png" being the
 	| assumed extension if one is not explicitly specified).
 	|
 	| The "public" variable is the relative path from your application
-	| directory to the public directory. This is used in conjunction with the
-	| Application class in case you wish to use a different directory structure
-	| than Laravel 5's default.
+	| directory to the public directory. This is used by public_path() which
+	| can be used to publish your assets into another public directory such as
+	| "../public_html" and can be used in conjunction with the Application
+	| class in case you wish to use a different directory structure than
+	| Laravel's default.
 	|
 	*/
 	'paths' => [
