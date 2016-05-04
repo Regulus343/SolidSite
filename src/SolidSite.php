@@ -94,7 +94,7 @@ class SolidSite {
 	}
 
 	/**
-	 * Get the website email.
+	 * Get a website email.
 	 *
 	 * @param  mixed    $type
 	 * @return string
@@ -104,9 +104,12 @@ class SolidSite {
 		if (is_null($type))
 			$type = "admin";
 
+		if ($this->get('email.testMode'))
+			$type = "test";
+
 		$email = $this->get('email.addresses.'.camel_case($type));
 
-		if (strpos($email, '@') === false)
+		if (!is_null($email) && strpos($email, '@') === false)
 			$email .= '@'.str_replace('https://', '', str_replace('http://', '', config('app.url')));
 
 		return $email;

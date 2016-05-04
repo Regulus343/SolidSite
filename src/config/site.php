@@ -16,6 +16,7 @@ return [
 	'name'  => 'Website Name',
 	'email' => [
 		'enabled'   => true,
+		'test_mode' => false,
 		'addresses' => [
 			'admin' => 'webmaster',
 			'test'  => 'webmaster',
@@ -116,7 +117,7 @@ return [
 	| Button List
 	|--------------------------------------------------------------------------
 	|
-	| The ID for breadcrumb trails.
+	| The default classes for button lists.
 	|
 	*/
 	'buttons' => [
@@ -127,10 +128,10 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Pagination - Records Per Page
+	| Pagination
 	|--------------------------------------------------------------------------
 	|
-	| The number of records per page for pagination.
+	| The pagination settings.
 	|
 	*/
 	'pagination' => [
