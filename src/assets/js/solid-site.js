@@ -3,82 +3,243 @@
 | SolidSite JS
 |------------------------------------------------------------------------------
 |
-| Last Updated: January 8, 2016
+| Last Updated: May 3, 2016
 |
 */
 
 var SolidSite = {
 
-	baseUrl:   null,
-	csrfToken: null,
+	urls: {
+		base: null,
+		api:  null,
+	},
 
-	setUrl: function(url, type)
+	csrfToken:            null,
+	suppressNextResponse: false,
+	showMessageFunction:  null,
+	pageLabel:            "Page",
+
+	init: function()
 	{
-		if (type === undefined)
-			type = "base";
+		this.initPagination();
+	},
 
-		this[type+'Url'] = url;
+	setUrl: function(type, url)
+	{
+		this.urls[type] = url;
+	},
+
+	setUrls: function(urls)
+	{
+		for (type in urls)
+		{
+			this.setUrl(type, urls[type]);
+		}
 	},
 
 	createUrl: function(uri, type)
 	{
-		if (type === undefined)
+		if (typeof type == "undefined" || type == null)
 			type = "base";
 
-		return this[type+'Url'] + '/' + uri;
+		return this.urls[type] + '/' + uri;
 	},
 
 	setCsrfToken: function(csrfToken)
 	{
+		this.csrfToken = csrfToken;
+
 		$.ajaxSetup({
-			headers: {'X-CSRF-TOKEN': csrfToken}
+			headers: {
+				'X-CSRF-TOKEN': csrfToken,
+			}
 		});
-
-		return this.csrfToken = csrfToken;
 	},
 
-	getCsrfToken: function()
+	call: function(config)
 	{
-		return this.csrfToken;
+		if (typeof config.maintainUrl == "undefined" || !config.maintainUrl)
+			config.url = this.createUrl(config.url);
+
+		if (typeof config.type == "undefined")
+			config.type = "post";
+
+		config.dataType = "json";
+
+		config.xhrFields = {
+			withCredentials: true,
+		};
+
+		if (typeof config.success == "undefined")
+			config.success = function(response)
+			{
+				Api.processResponse(response, form);
+			};
+
+		$.ajax(config);
 	},
 
-	prepData: function(data)
+	processResponse: function(response, form)
 	{
-		data['_token'] = this.csrfToken;
+		if (!this.suppressNextResponse)
+		{
+			if (typeof response == "string")
+			{
+				if (response.substr(0, 1) == "{")
+				{
+					response = $.parseJSON(response);
+				}
+				else
+				{
+					response = {
+						type:    'Error',
+						message: response,
+						data:    {},
+					};
+				}
+			}
 
-		return data;
+			if (typeof response.message != undefined && response.message != false && this.showMessageFunction != null)
+				this.executeFunction(this.showMessageFunction, response.message, response.type);
+
+			if (typeof response.data.uri != "undefined")
+				document.location.href = this.createUrl(response.data.uri);
+
+			if (typeof response.data.url != "undefined")
+				document.location.href = response.data.url;
+
+			if (typeof form != "undefined")
+			{
+				if (response.type == "Success")
+				{
+					if (!form.data('prevent-modal-hide'))
+						$(form).parents('.modal').find('[data-dismiss=modal]').trigger('click');
+
+					// remove form errors
+					form.find('.has-error').removeClass('has-error');
+					form.find('.error').remove();
+
+					// execute callback function
+					var callbackFunction = form.data('callback-function');
+					if (callbackFunction)
+					{
+						this.executeFunction(callbackFunction, response, form);
+					}
+				}
+				else
+				{
+					if (typeof form != "undefined" && typeof response.data.errors == "object")
+					{
+						// set form errors
+						form.find('.has-error').removeClass('has-error');
+						form.find('.error').remove();
+
+						for (fieldName in response.data.errors)
+						{
+							var error = response.data.errors[fieldName];
+							var field = form.find('#field-'+fieldName.replace(/_/g, '-').replace(/\./g, '-'));
+
+							if (!field.length)
+								field = form.find('.field-'+fieldName.replace(/_/g, '-').replace(/\./g, '-'));
+
+							field.parent('.form-group').addClass('has-error');
+							field.addClass('has-error');
+
+							var fieldNameLabel = fieldName.replace(/\_/g, ' ');
+							if (field.data('field-name'))
+							{
+								fieldNameLabel = field.data('field-name');
+
+								if (fieldNameLabel != fieldNameLabel.toUpperCase())
+									fieldNameLabel = fieldNameLabel.charAt(0).toLowerCase() + fieldNameLabel.slice(1);
+							}
+
+							if (typeof error == "object")
+								error = error[0];
+
+							error = '<div class="error"><i class="fa fa-exclamation-triangle"></i> '+error.replace(fieldName.replace(/\_/g, ' '), fieldNameLabel)+'</div>';
+
+							field.parents('.form-group').append(error);
+						}
+
+						// reset reCAPTCHA if one exists
+						var reCaptcha = form.find('.g-recaptcha');
+						if (reCaptcha.length)
+							reCaptcha.reset();
+					}
+				}
+			}
+		}
+		else
+		{
+			this.suppressNextResponse = false;
+		}
 	},
 
-	prepConfig: function(config)
+	executeFunction: function(functionItem, parameter1, parameter2)
 	{
-		if (config.url === undefined && config.uri !== undefined)
-			config.url = this.createUrl(uri);
+		if (functionItem === undefined)
+			return null;
 
-		if (config.data !== undefined && config.data['_token'] === undefined)
-			config.data = this.prepData(config.data);
+		if (typeof functionItem == "function")
+			return functionItem(parameter1, parameter2);
 
-		return config;
+		var functionArray = functionItem.split('.');
+
+		if (functionArray.length == 3)
+			return window[functionArray[0]][functionArray[1]][functionArray[2]](parameter1, parameter2);
+		else if (functionArray.length == 2)
+			return window[functionArray[0]][functionArray[1]](parameter1, parameter2);
+		else
+			return window[functionArray[0]](parameter1, parameter2);
 	},
 
-	ajax: function(config)
+	initPagination: function()
 	{
-		return $.ajax(this.prepConfig(config));
-	},
+		$('.pagination li a').off('click').on('click', function(e)
+		{
+			e.preventDefault();
 
-	get: function(url, data, success, dataType)
-	{
-		if (data !== undefined && data['_token'] === undefined)
-			data = this.prepData(data);
+			var page = $(this).data('page');
 
-		return $.get(url, data, success, dataType);
-	},
+			$('#field-page').val(page);
 
-	post: function(url, data, success, dataType)
-	{
-		if (data !== undefined && data['_token'] === undefined)
-			data = this.prepData(data);
+			$('.pagination li a').removeClass('btn-primary');
+			$('.pagination li a[data-page="'+page+'"]').addClass('btn-primary');
 
-		return $.post(url, data, success, dataType);
+			var paginationArea = $(this).parents('.pagination');
+
+			var url = paginationArea.data('url');
+
+			if (parseInt(page) > 1)
+			{
+				url += '/'+page;
+
+				var pageTrailItem     = $('.breadcrumb li.page');
+				var pageTrailItemText = SolidSite.pageLabel+' '+page;
+
+				if (pageTrailItem.length)
+				{
+					pageTrailItem.find('a').attr('href', url);
+					pageTrailItem.find('a').text(pageTrailItemText);
+					pageTrailItem.show();
+				}
+				else
+				{
+					$('.breadcrumb li.active').removeClass('active');
+					$('.breadcrumb').append('<li class="active page"><a href="'+url+'">'+pageTrailItemText+'</a>');
+				}
+			}
+			else
+			{
+				$('.breadcrumb li.page').remove();
+				$('.breadcrumb li:last-child').addClass('active');
+			}
+
+			history.pushState('', document.title, url);
+
+			SolidSite.executeFunction(paginationArea.data('action'));
+		});
 	},
 
 };

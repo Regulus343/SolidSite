@@ -1,13 +1,18 @@
 SolidSite
 =========
 
-**A Laravel 5 composer package that assigns section names & titles to pages, simplifies creation of breadcrumb trails, and is useful for other components that require page identifying information such as menus that highlight the current location.**
+**A Laravel 5 composer package that assigns section names & titles to pages, simplifies creation of breadcrumb trails, pagination, and other components.**
+
+> **Note:** For Laravel 4, you may use <a href="https://github.com/Regulus343/SolidSite/tree/v0.5.2">version 0.5.2</a>.
 
 - [Installation](#installation)
 - [Setting Sections, Sub Sections, and Titles](#setting-identifiers)
 - [Highlighting Menu Items Based on Section and Sub Section](#highlighting-menu-items)
 - [Asset URLs](#asset-urls)
-- [Creating a Breadcrumb Trail](#creating-breadcrumb-trail)
+- [Breadcrumb Trails](#breadcrumb-trails)
+- [Button Lists](#button-lists)
+- [Pagination](#pagination)
+- [JavaScript](#js)
 
 <a name="installation"></a>
 ## Installation
@@ -15,7 +20,7 @@ SolidSite
 To install SolidSite, make sure "regulus/solid-site" has been added to Laravel 5's `composer.json` file.
 
 	"require": {
-		"regulus/solid-site": "0.6.*"
+		"regulus/solid-site": "0.7.*"
 	},
 
 Then run `php composer.phar update` from the command line. Composer will install the SolidSite package. Now, all you have to do is register the service provider and set up SolidSite's alias in `config/app.php`. Add this to the `providers` array:
@@ -28,7 +33,7 @@ And add this to the `aliases` array:
 
 You may use 'SolidSite', or another alias, but 'Site' is recommended for the sake of simplicity. SolidSite is now ready to go.
 
-Now, run publish the config file, `site.php`, from the command line:
+Now, publish the config file, `site.php`, as well as the views and JS file, from the command line:
 
 	php artisan vendor:publish
 
@@ -52,7 +57,14 @@ This is, however, entirely optional. If you choose not to use it, you may still 
 **Setting identifiers:**
 
 	Site::set('section', 'Forum');
-	Site::setMulti(array('subSection', 'title.main'), 'Forum: General');
+
+	Site::set(['subSection', 'title.main'], 'Forum: General'); // sets both to "Forum: General"
+
+	Site::set([
+		'section'    => 'Forum',
+		'subSection' => 'General',
+		'title.main' => 'Forum: General',
+	]);
 
 You can use the SolidSite package to store config items that you'd rather not store anywhere else. SolidSite has a few default identifiers including `section`, `subSection`, `title`, and `titleHeading`. These can be used to highlight menu items in a menu, or for anything else that requires a unique page identifier.
 
@@ -84,15 +96,7 @@ This will return the `title.main` config item along with the `name` config item 
 
 	Site::heading();
 
-This will return the `title.heading` config item or the `title` config item if a heading title is not set. This can be used in cases where you want to make the heading of the page different from what is in the web page's `title` tag.
-
-**Setting the page title prefix:**
-
-	Site::setTitlePrefix('Forum'); // set a prefix only for the document title itself
-
-	Site::setTitlePrefix('Forum', true); // set a prefix for the document title as well as the page heading
-
-This will allow you to set a title prefix, which can be useful in controller `__constructor()` methods to set a prefix for the titles of all pages within a controller. The above example paired with `Site::setTitle('Sections')` would lead to a fully qualified title such as `Forum: Sections :: Website Name`. If the second parameter was not set to `true`, the heading would be simply `Sections`. If it is true, the heading would be `Forum: Sections`.
+This will return the `title.heading` config item or the `title` config item if a heading title is not set. This can be used in cases where you want to make the heading of the page different from what is in the web page's `title` tag. You may also use `setSubHeading()` and `subHeading()` should you require a sub heading.
 
 <a name="highlighting-menu-items"></a>
 ## Highlighting Menu Items Based on Section and Sub Section
@@ -139,38 +143,117 @@ If successful, a class will be added to the menu list item. The default class is
 
 	echo Site::img('logo.png');
 
-	echo Site::img('logo'); // if no extension is provided, ".png" is assumed
-
 **Create a CSS asset URL:**
 
 	echo Site::css('styles.css');
-
-	echo Site::css('styles'); // if no extension is provided, ".css" is assumed
 
 **Create a JavaScript asset URL:**
 
 	echo Site::js('jquery.js');
 
-	echo Site::js('jquery'); // if no extension is provided, ".js" is assumed
-
 **Create an uploaded file URL:**
 
-	echo Site::uploadedFile('users/1.png');
+	echo Site::uploadedFile('user_images/1.png');
 
 The asset URLs methods should help to shorten markup and make your views cleaner. You can customize the directories for each of the asset types in `config.php` according to your preferences.
 
-<a name="creating-breadcrumb-trail"></a>
-## Creating a Breadcrumb Trail
+For `img()`, `css()`, and `js()`, you are not required to add an extension. For the image method, `.png` will be the assumed extension if you leave it out:
+
+	echo Site::img('logo');   //automatically adds ".png"
+
+	echo Site::css('styles'); //automatically adds ".css"
+
+	echo Site::js('jquery');  //automatically adds ".js"
+
+<a name="breadcrumb-trails"></a>
+## Breadcrumb Trails
 
 **Adding a breadcrumb trail item:**
 
 	Site::addTrailItem('Home');
-	Site::addTrailItem('Stuff', 'stuff')
+	Site::addTrailItem('Stuff', 'stuff');
 
 The first argument is the title that will appear in the breadcrumb trail. The second argument is the URI route it links to. By default, it will link to the root page of your website. Setting the initial item in the `before()` filter in `filters.php` works well.
 
-**Creating a breadcrumb trail in a view:**
+**Adding multiple breadcrumb trail items:**
 
-	echo Site::getBreadcrumbTrailMarkup();
+	Site::addTrailItems([
+		'Home'     => null, // will be base URL
+		'Forum'    => 'forum', // will be like http://website.com/forum
+		'Sections' => ['sections', 'forum'], // will be like http://forum.website.com/sections
+	]);
 
-> **Note:** If you would prefer to build the breadcrumb trail markup yourself, you can use `getTrailItems()`.
+**Outputting breadcrumb trail markup in a view:**
+
+	{!! Site::getBreadcrumbTrailMarkup() !!}
+
+> **Note:** If you would prefer to build the breadcrumb trail markup yourself, you can use `getTrailItems()`. The view for the breadcrumb trail will, however, be published to `resources/views/vendor/solid-site`, so you may also modify the existing one.
+
+<a name="button-lists"></a>
+## Button Lists
+
+**Adding a button to the list:**
+
+	Site::addButton('Home', 'home'); // simple version (label, URI / URL)
+
+	Site::addButton([ // versatile version for more customization
+		'uri'    => 'home',
+		'label'  => 'Home',
+		'class'  => 'btn btn-primary',
+	]);
+
+**Adding multiple buttons:**
+
+	Site::addButtons([
+		[
+			'uri'    => 'home',
+			'label'  => 'Home',
+			'class'  => 'btn btn-primary',
+		],
+		[
+			'url'    => [null, 'forum'], // will be like http://forum.website.com
+			'label'  => 'Forum',
+			'target' => '_blank',
+		],
+	]);
+
+You may concurrently set multiple button lists as well. Each one has a sort of "namespace". You can change the active one with `setButtonList()` (the default is `main`), or you can simply add a `list` variable to the button item array. It is also possible to specify the list as the the second parameter of the `addButtons()` method.
+
+**Adding multiple buttons:**
+
+**Outputting button list markup in a view:**
+
+	{!! Site::getButtonListMarkup() !!}
+
+	{!! Site::getButtonListMarkup('secondary') !!}
+
+The first example will use the active button list. The second one specifies the list to display.
+
+<a name="pagination"></a>
+## Pagination
+
+SolidSite makes it easy to create URI segment-powered pagination rather than having to rely on GET query strings like `?page=2`. This can allow you to create pagination systems that feature very clean URLs.
+
+**Setting up pagination:**
+
+	$query = Items::where('type_id', 1); // set up a query using a model or the query builder
+
+	$page = 2; // can be an integer, or simply "last" to get the last page
+
+	Site::paginate($query, $page, [
+		'uri'      => 'items', // you can pass a URI or URL for the pagination buttons
+		'function' => 'Actions.getItems', // you can also pass a function to be called when a button is clicked
+	]);
+
+> **Note:** The `SolidSite` JavaScript class can be used in conjunction with `paginate()` to set up AJAX-based paginated data requesting when buttons are clicked.
+
+<a name="js"></a>
+## JavaScript
+
+SolidSite includes a simple JavaScript class for defining app URLs (base URL and API URL are included as defaults), applying Laravel's CSRF token to all AJAX requests, executing function via strings, and initializing AJAX-based pagination. You may easily modify and add to the basic functions provided.
+
+**Loading and initializing the JS:**
+
+	@include('solid-site::load_js')
+
+> **Note:** If you are using AJAX-based pagination, it's a good idea to return rendered markup of the pagination menu with each request so that you may update the page link radius (this radius will default to 3 links above and below the current page, assuming they exist).

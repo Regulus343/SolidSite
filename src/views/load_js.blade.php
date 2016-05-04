@@ -8,9 +8,16 @@
 
 	$(document).ready(function()
 	{
-		SolidSite.setUrl('{{ config('app.url') }}');
+		var urls = {
+			base: "{{ Site::rootUrl() }}",
+			api:  "{{ Site::url(null, 'api') }}",
+		};
 
-		SolidSite.setCsrfToken('{{ Session::token() }}');
+		SolidSite.setUrls(urls);
+
+		SolidSite.setCsrfToken('{{ csrf_token() }}');
+
+		SolidSite.init();
 	});
 
 </script>

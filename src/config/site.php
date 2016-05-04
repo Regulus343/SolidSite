@@ -18,31 +18,44 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
+	| Email Settings
+	|--------------------------------------------------------------------------
+	|
+	*/
+	'email' => [
+		'enable' => true,
+		'test'   => 'me@codyjassman.com',
+	],
+
+	/*
+	|--------------------------------------------------------------------------
 	| Assets, Image, SVG, CSS, JS, and Uploads Paths
 	|--------------------------------------------------------------------------
 	|
 	| The path variables can be used to easily load assets using Site::asset(),
 	| Site::img(), Site::css(), Site::js(), Site::svg(), and
-	| Site::uploadedFile() to create URLS for your assets. "img_path",
-	| "css_path", "js_path", and "uploads_path" will be appended to the end of
-	| "assets_path", so by default Site::img('image-name') would create a URL
+	| Site::uploadedFile() to create URLS for your assets. "img",
+	| "css", "js", and "uploads" will be appended to the end of
+	| "assets", so by default Site::img('image-name') would create a URL
 	| of http:://website.com/assets/images/image-name.png ("png" being the
 	| assumed extension if one is not explicitly specified).
 	|
-	| The "public_path" variable is the relative path from your application
+	| The "public" variable is the relative path from your application
 	| directory to the public directory. This is used in conjunction with the
 	| Application class in case you wish to use a different directory structure
 	| than Laravel 5's default.
 	|
 	*/
-	'public_path'  => 'public',
-	'root_path'    => '',
-	'assets_path'  => 'assets',
-	'img_path'     => 'images',
-	'svg_path'     => 'svg',
-	'css_path'     => 'css',
-	'js_path'      => 'js',
-	'uploads_path' => 'uploads',
+	'paths' => [
+		'public'  => 'public',
+		'root'    => '',
+		'assets'  => 'assets',
+		'images'  => 'images',
+		'svg'     => 'svg',
+		'css'     => 'css',
+		'js'      => 'js',
+		'uploads' => 'uploads',
+	],
 
 	/*
 	|--------------------------------------------------------------------------
@@ -55,7 +68,7 @@ return [
 	|
 	*/
 	'section'     => 'Home',
-	'sub_section' => '',
+	'sub_section' => null,
 
 	/*
 	|--------------------------------------------------------------------------
@@ -99,6 +112,40 @@ return [
 	| The ID for breadcrumb trails.
 	|
 	*/
-	'trail_id' => 'breadcrumb-trail',
+	'trail' => [
+		'id' => 'breadcrumb-trail',
+	],
+
+	/*
+	|--------------------------------------------------------------------------
+	| Button List
+	|--------------------------------------------------------------------------
+	|
+	| The ID for breadcrumb trails.
+	|
+	*/
+	'buttons' => [
+		'default_list_class'           => 'button-group',
+		'default_class'                => 'btn btn-default',
+		'default_class_always_present' => true,
+	],
+
+	/*
+	|--------------------------------------------------------------------------
+	| Pagination - Records Per Page
+	|--------------------------------------------------------------------------
+	|
+	| The number of records per page for pagination.
+	|
+	*/
+	'pagination' => [
+		'items_per_page'   => 25,
+		'page_link_radius' => 3,
+		'classes'          => [
+			'default'  => 'btn btn-sm btn-default',
+			'active'   => 'btn-primary',
+			'inactive' => null,
+		],
+	],
 
 ];

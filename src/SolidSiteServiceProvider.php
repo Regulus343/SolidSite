@@ -9,7 +9,7 @@ class SolidSiteServiceProvider extends ServiceProvider {
 	 *
 	 * @var bool
 	 */
-	protected $defer = true;
+	protected $defer = false;
 
 	/**
 	 * Bootstrap the application events.
@@ -21,6 +21,7 @@ class SolidSiteServiceProvider extends ServiceProvider {
 		$this->publishes([
 			__DIR__.'/config/site.php' => config_path('site.php'),
 			__DIR__.'/assets'          => assets_path('regulus/solid-site'),
+			__DIR__.'/views'           => resource_path('views/vendor/solid-site'),
 		]);
 
 		$this->loadViewsFrom(__DIR__.'/views', 'solid-site');

@@ -3,18 +3,19 @@
 /*----------------------------------------------------------------------------------------------------------
 	SolidSite
 		A Laravel 5 composer package that assigns section names & titles to pages, simplifies creation of
-		breadcrumb trails, and is useful for other components that require page identifying information
-		such as menus that highlight the current location.
+		breadcrumb trails, pagination, and other components.
 
 		created by Cody Jassman
-		v0.6.5
-		last updated on April 25, 2016
+		v0.7.0
+		last updated on May 3, 2016
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Pagination\Paginator;
 
 class SolidSite {
 
@@ -29,6 +30,11 @@ class SolidSite {
 	public $buttons = [];
 
 	/**
+	 * @var    string
+	 */
+	public $buttonList = "main";
+
+	/**
 	 * Get a config item.
 	 *
 	 * @param  string   $item
@@ -41,32 +47,40 @@ class SolidSite {
 	}
 
 	/**
-	 * Set a config item.
+	 * Set a config item or multiple config items.
 	 *
-	 * @param  string   $item
+	 * @param  mixed    $item
 	 * @param  mixed    $value
 	 * @return mixed
 	 */
 	public function set($item, $value = null)
 	{
-		Config::set('site.'.snake_case($item), $value);
+		if (is_array($item))
+		{
+			$items       = $item;
+			$associative = array_keys($items) !== range(0, count($items) - 1);
+
+			if ($associative)
+			{
+				foreach ($items as $item => $value)
+				{
+					Config::set('site.'.snake_case($item), $value);
+				}
+			}
+			else
+			{
+				foreach ($items as $item)
+				{
+					Config::set('site.'.snake_case($item), $value);
+				}
+			}
+		}
+		else
+		{
+			Config::set('site.'.snake_case($item), $value);
+		}
 
 		return $value;
-	}
-
-	/**
-	 * Set multiple config items to one particular value.
-	 *
-	 * @param  array    $items
-	 * @param  mixed    $value
-	 * @return void
-	 */
-	public function setMulti($items = array(), $value = null)
-	{
-		foreach ($items as $item)
-		{
-			$this->set($item, $value);
-		}
 	}
 
 	/**
@@ -298,7 +312,7 @@ class SolidSite {
 	 */
 	public function publicPath()
 	{
-		return base_path().DIRECTORY_SEPARATOR.config('site.public_path');
+		return base_path().DIRECTORY_SEPARATOR.$this->get('paths.public');
 	}
 
 	/**
@@ -310,12 +324,12 @@ class SolidSite {
 	 */
 	public function assetsPath($relativePath = '', $fromAppDir = false)
 	{
-		$path = ($fromAppDir ? $this->publicPath() : $this->get('rootPath'));
+		$path = ($fromAppDir ? $this->publicPath() : $this->get('paths.root'));
 
 		if (is_null($path) || $path == "" || !$path)
-			$path = $this->get('assetsPath');
+			$path = $this->get('paths.assets');
 		else
-			$path .= '/'.$this->get('assetsPath');
+			$path .= '/'.$this->get('paths.assets');
 
 		if (!is_null($relativePath) && $relativePath != "" && $relativePath)
 			$path .= '/'.$relativePath;
@@ -373,7 +387,7 @@ class SolidSite {
 		if ($addExtension && $path != "" && !in_array(File::extension($path), ['png', 'jpg', 'jpeg', 'jpe', 'gif', 'ico', 'svg']))
 			$path .= ".png";
 
-		$path = $this->getDirectoryForPath($this->get('imgPath').'/'.$path, $package);
+		$path = $this->getDirectoryForPath($this->get('paths.images').'/'.$path, $package);
 
 		if (is_null($useRoot))
 			$useRoot = $this->get('useRoot');
@@ -409,7 +423,7 @@ class SolidSite {
 		if ($path != "" && File::extension($path) != "css")
 			$path .= ".css";
 
-		$path = $this->getDirectoryForPath($this->get('cssPath').'/'.$path, $package);
+		$path = $this->getDirectoryForPath($this->get('paths.css').'/'.$path, $package);
 
 		if (is_null($useRoot))
 			$useRoot = $this->get('useRoot');
@@ -432,7 +446,7 @@ class SolidSite {
 		if ($path != "" && File::extension($path) != "js")
 			$path .= ".js";
 
-		$path = $this->getDirectoryForPath($this->get('jsPath').'/'.$path, $package);
+		$path = $this->getDirectoryForPath($this->get('paths.js').'/'.$path, $package);
 
 		if (is_null($useRoot))
 			$useRoot = $this->get('useRoot');
@@ -453,11 +467,11 @@ class SolidSite {
 		if ($path != "" && File::extension($path) != "svg")
 			$path .= ".svg";
 
-		$svgPath = $this->get('svgPath');
+		$svgPath = $this->get('paths.svg');
 		if ($svgPath != "" && $svgPath != false && !is_null($svgPath))
 			$path = $svgPath.'/'.$path;
 
-		$path = $this->getDirectoryForPath($this->get('imgPath').'/'.$path, $package);
+		$path = $this->getDirectoryForPath($this->get('paths.images').'/'.$path, $package);
 
 		if (is_file($path))
 			return file_get_contents($path);
@@ -473,7 +487,7 @@ class SolidSite {
 	 */
 	public function uploadedFile($path = '')
 	{
-		$uploadsPath = $this->get('uploadsPath');
+		$uploadsPath = $this->get('paths.uploads');
 
 		if (substr($path, 0, strlen($uploadsPath)) != $uploadsPath)
 			$path = $uploadsPath.'/'.$path;
@@ -497,7 +511,9 @@ class SolidSite {
 		{
 			if (in_array($item, $itemToCompare))
 				$matches = true;
-		} else {
+		}
+		else
+		{
 			if ($item == $itemToCompare)
 				$matches = true;
 		}
@@ -528,9 +544,9 @@ class SolidSite {
 	 * @param  array    $comparisonData
 	 * @param  boolean  $inClass
 	 * @param  mixed    $className
-	 * @return string
+	 * @return mixed
 	 */
-	public function selectByMulti($comparisonData = array(), $inClass = false, $className = null)
+	public function selectByMulti($comparisonData = [], $inClass = false, $className = null)
 	{
 		foreach ($comparisonData as $item => $itemToCompare)
 		{
@@ -552,7 +568,7 @@ class SolidSite {
 	private function selectedHtml($inClass = false, $className = null)
 	{
 		if (!$className || !is_string($className) || $className == "")
-			$className = $this->get('selected_class');
+			$className = $this->get('selectedClass');
 
 		if ($inClass)
 			return ' '.$className;
@@ -564,16 +580,40 @@ class SolidSite {
 	 * Add an item to the breadcrumb trail.
 	 *
 	 * @param  string   $title
-	 * @param  string   $uri
+	 * @param  mixed    $uri
+	 * @param  boolean  $class
 	 * @return void
 	 */
-	public function addTrailItem($title = '', $uri = null)
+	public function addTrailItem($title = '', $uri = null, $class = null)
 	{
-		if ($title != "")
-			$this->trailItems[] = (object) [
-				'title' => $title,
-				'uri'   => $uri,
-			];
+		if ($title == "")
+			return false;
+
+		if (is_null($uri) || (is_string($uri) && (substr($uri, 0, 7) == "http://" || substr($uri, 0, 8) == "https://")))
+		{
+			$url = $uri;
+		}
+		else
+		{
+			if (is_array($uri))
+			{
+				$url = $this->url($uri[0], $uri[1]);
+				$uri = $uri[0];
+			}
+			else
+			{
+				$url = $this->url($uri);
+			}
+		}
+
+		$this->trailItems[] = (object) [
+			'title' => $title,
+			'uri'   => $uri,
+			'url'   => $url,
+			'class' => $class,
+		];
+
+		return true;
 	}
 
 	/**
@@ -584,7 +624,8 @@ class SolidSite {
 	 */
 	public function addTrailItems($items)
 	{
-		foreach ($items as $title => $uri) {
+		foreach ($items as $title => $uri)
+		{
 			$this->addTrailItem($title, $uri);
 		}
 	}
@@ -610,6 +651,37 @@ class SolidSite {
 	}
 
 	/**
+	 * Reset the breadcrumb trail items.
+	 *
+	 * @param  object   $item
+	 * @param  mixed    $index
+	 * @param  boolean  $inClass
+	 * @return string
+	 */
+	public function getTrailItemClass($item, $index = null, $inClass = false)
+	{
+		$class = $item->class;
+
+		if (!is_null($index) && $index + 1 == count($this->trailItems))
+		{
+			if (is_null($class))
+				$class = "";
+			else
+				$class .= " ";
+
+			$class .= "active";
+		}
+
+		if (is_null($class))
+			return "";
+
+		if ($inClass)
+			return ' '.$class;
+		else
+			return ' class="'.$class.'"';
+	}
+
+	/**
 	 * Create HTML for breadcrumb trail.
 	 *
 	 * @param  mixed    $id
@@ -617,41 +689,17 @@ class SolidSite {
 	 */
 	public function getBreadcrumbTrailMarkup($id = null)
 	{
-		$html = '';
 		if (is_null($id))
-			$id = $this->get('trailId');
+			$id = $this->get('trail.id');
 
-		if (!empty($this->trailItems))
-		{
-			$html  = '<ol class="breadcrumb"'.(!is_null($id) ? ' id="'.$id.'"' : '').'>'."\n";
-
-			foreach ($this->trailItems as $i => $item)
-			{
-				$html .= '<li'.($i + 1 == count($this->trailItems) ? ' class="active"' : '').'>';
-
-				if (!is_null($item->uri))
-				{
-					if (substr($item->uri, 0, 7) == "http://" || substr($item->uri, 0, 8) == "https://")
-						$url = $item->uri;
-					else
-						$url = URL::to($item->uri);
-
-					$html .= '<a href="'.$url.'">'.$this->entities($item->title).'</a>';
-				} else {
-					$html .= $this->entities($item->title);
-				}
-
-				$html .= '</li>'."\n";
-			}
-
-			$html .= '</ol>'."\n";
-		}
-
-		return $html;
+		return view('solid-site::breadcrumb_trail', [
+			'trailId'    => $id,
+			'trailItems' => $this->trailItems,
+		])->render();
 	}
 
 	/**
-	 * Add a button to the button list.
+	 * Add a button to a button list.
 	 *
 	 * @param  mixed    $label
 	 * @param  string   $uri
@@ -660,6 +708,7 @@ class SolidSite {
 	public function addButton($label = '', $uri = null)
 	{
 		$button = [
+			'tag'   => null,
 			'label' => null,
 			'uri'   => null,
 			'url'   => null,
@@ -668,106 +717,235 @@ class SolidSite {
 			'id'    => null,
 		];
 
-		if (is_array($label)) {
+		if (is_array($label))
+		{
 			$button = array_merge($button, $label);
-		} else {
+		}
+		else
+		{
 			$button['label'] = $label;
 			$button['uri']   = $uri;
 		}
 
+		if (isset($button['list']))
+			$this->setButtonList($button['list']);
+
+		if (is_null($button['url']) && !is_null($button['uri']))
+		{
+			$button['url'] = $this->url($button['uri']);
+		}
+		else
+		{
+			if (is_array($button['url']))
+				$button['url'] = $this->url($button['url'][0], $button['url'][1]);
+		}
+
+		if (is_null($button['tag']))
+			$button['tag'] = !is_null($button['url']) ? 'a' : 'button';
+
+		if (is_null($button['class']) || $button['class'] == "")
+		{
+			$button['class'] = $this->get('buttons.defaultClass');
+		}
+		else
+		{
+			if ($this->get('buttons.defaultClassAlwaysPresent'))
+				$button['class'] = $this->get('buttons.defaultClass').' '.$button['class'];
+		}
+
 		if (!is_null($button['label']) && $button['label'] != "")
-			$this->buttons[] = (object) $button;
+			$this->buttons[$this->buttonList][] = (object) $button;
 	}
 
 	/**
-	 * Add buttons to the button list.
+	 * Add buttons to a button list.
 	 *
 	 * @param  array    $buttons
+	 * @param  mixed    $list
 	 * @return void
 	 */
-	public function addButtons($buttons)
+	public function addButtons($buttons, $list = null)
 	{
-		foreach ($buttons as $button) {
+		foreach ($buttons as $button)
+		{
+			if (!is_null($list))
+				$button['list'] = $list;
+
 			$this->addButton($button);
 		}
 	}
 
 	/**
-	 * Get the button list.
+	 * Get a button list.
 	 *
+	 * @param  mixed    $list
 	 * @return array
 	 */
-	public function getButtons()
+	public function getButtons($list = null)
 	{
-		return $this->buttons;
+		if (is_null($list))
+			$list = $this->buttonList;
+
+		return $this->buttons[$list];
 	}
 
 	/**
-	 * Reset the button list.
+	 * Set the active button list.
 	 *
+	 * @param  string    $list
 	 * @return void
 	 */
-	public function resetButtons()
+	public function setButtonList($list)
 	{
-		$this->buttons = [];
+		$this->buttonList = $list;
+	}
+
+	/**
+	 * Reset a button list.
+	 *
+	 * @param  mixed    $list
+	 * @return void
+	 */
+	public function resetButtons($list = null)
+	{
+		if (is_null($list))
+			$this->buttons = [];
+		else
+			$this->buttons[$list] = [];
+	}
+
+	/**
+	 * Get the HTML attributes for a button.
+	 *
+	 * @param  object   $button
+	 * @return string
+	 */
+	public function getButtonAttributes($button)
+	{
+		$attributes = "";
+
+		$ignoredAttributes = ['tag', 'uri', 'label'];
+		foreach ($button as $attribute => $value)
+		{
+			if (!in_array($attribute, $ignoredAttributes) && !is_null($value))
+			{
+				if ($attributes != "")
+					$attributes .= " ";
+
+				if ($attribute == "url")
+				{
+					$attributes .= ($button->tag == "a" ? 'href' : 'data-url').'="'.$value.'"';
+				}
+				else
+				{
+					$attributes .= $attribute.'="'.$value.'"';
+				}
+			}
+		}
+
+		return $attributes;
 	}
 
 	/**
 	 * Create HTML for button list.
 	 *
-	 * @param  string   $class
+	 * @param  mixed    $data
 	 * @return string
 	 */
-	public function getButtonListMarkup($class = 'button-group')
+	public function getButtonListMarkup($data = null)
 	{
-		$html = '';
+		if (is_string($data))
+			$data = [
+				'list' => $data,
+			];
 
-		if (!empty($this->buttons))
+		if (!isset($data['list']))
+			$data['list'] = $this->buttonList;
+
+		if (!isset($data['id']))
+			$data['id'] = "button-list-".strtolower(str_replace(' ', '-', $data['list']));
+
+		if (!isset($data['class']))
+			$data['class'] = $this->get('buttons.defaultListClass');
+
+		$data['buttons'] = $this->getButtons($data['list']);
+
+		$view = isset($data['view']) ? $data['view'] : "solid-site::button_list";
+
+		return view($view, $data)->render();
+	}
+
+	/**
+	 * Get paginated items (intended for use with pagination that does not use GET query strings).
+	 *
+	 * @param  QueryBuilder  $query
+	 * @param  mixed    $page
+	 * @return Collection
+	 */
+	public function paginate($query, $page = null, $config = [])
+	{
+		$rawQuery = $query;
+
+		$itemsPerPage = isset($config['itemsPerPage']) ? $config['itemsPerPage'] : $this->get('pagination.itemsPerPage', 25);
+
+		if ($page != "last")
 		{
-			$html  = '<div class="'.trim($class).'">'."\n";
+			if (is_null($page))
+				$page = Input::get('page');
 
-			foreach ($this->buttons as $button)
-			{
-				$tag = (!is_null($button->uri) || !is_null($button->url) ? 'a' : 'button');
-
-				$html .= '<'.$tag;
-
-				if (!is_null($button->uri)) {
-					$html .= ' href="'.URL::to($button->uri).'"';
-				} else {
-					if (!is_null($button->url))
-						$html .= ' href="'.$button->url.'" target="_blank"';
-				}
-
-				if (is_null($button->class))
-					$button->class = "btn btn-default";
-
-				$html .= ' class="'.$button->class.(!is_null($button->icon) && $button->label != "" ? ' icon' : '').'"';
-
-				if (!is_null($button->id))
-					$html .= ' id="'.$id.'"';
-
-				$html .= '>';
-
-				if (!is_null($button->icon))
-				{
-					$iconElement     = config('html.icon.element');
-					$iconClassPrefix = config('html.icon.class_prefix');
-
-					if (is_null($iconElement))
-						$iconElement = "i";
-
-					if (is_null($iconClassPrefix))
-						$iconClassPrefix = "fa fa-";
-
-					$html .= '<'.$iconElement.' class="'.$iconClassPrefix.$button->icon.'"></'.$iconElement.'> ';
-				}
-
-				$html .= $this->entities($button->label).'</'.$tag.'>'."\n";
-			}
-
-			$html .= '</div>'."\n";
+			$page = (int) $page;
+			if (!$page)
+				$page = 1;
 		}
+		else
+		{
+			$items = $rawQuery->paginate($itemsPerPage);
+
+			$page = $items->lastPage();
+		}
+
+		Paginator::currentPageResolver(function() use ($page)
+		{
+			return $page;
+		});
+
+		$items = $query->paginate($itemsPerPage);
+
+		if (isset($config['uri']) && !isset($config['url']))
+			$config['url'] = $this->url($config['uri']);
+
+		if (isset($config['url']) && is_array($config['url']))
+			$config['url'] = $this->url($config['url'][0], $config['url'][1]);
+
+		foreach ($config as $item => $value)
+		{
+			$this->set('pagination.'.$item, $value);
+
+			if ($item == "url")
+				$items->setPath($value);
+		}
+
+		$this->set('pagination.page', $page);
+		$this->set('pagination.lastPage', $items->lastPage());
+		$this->set('pagination.items', $items);
+
+		return $items;
+	}
+
+	/**
+	 * Create HTML for pagination.
+	 *
+	 * @param  mixed    $items
+	 * @return string
+	 */
+	public function getPaginationMarkup($items = null)
+	{
+		if (is_null($items))
+			$items = $this->get('pagination.items', []);
+
+		$html = view('solid-site::pagination', ['items' => $items])->render();
+
+		$this->set('pagination.uiAdded', true);
 
 		return $html;
 	}

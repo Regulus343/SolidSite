@@ -1,6 +1,6 @@
 {
 	"name": "regulus/solid-site",
-	"description": "A Laravel 5 composer package that assigns section names & titles to pages, simplifies creation of breadcrumb trails, and is useful for other components that require page identifying information such as menus that highlight the current location.",
+	"description": "A Laravel 5 composer package that assigns section names & titles to pages, simplifies creation of breadcrumb trails, pagination, and other components.",
 	"license": "MIT",
 	"authors": [
 		{
