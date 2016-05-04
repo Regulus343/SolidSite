@@ -4,27 +4,22 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Website Name and Webmaster Email
+	| Website Name and Email Settings
 	|--------------------------------------------------------------------------
 	|
-	| The name and webmaster email address for the website. If the email does
+	| The name and email addresses for the website. If an email address does
 	| not contain the "@" character, "@website.com" will be appended to it when
 	| using the email() method. The URL is based on the "url" config variable
 	| in config/app.php.
 	|
 	*/
 	'name'  => 'Website Name',
-	'email' => 'webmaster',
-
-	/*
-	|--------------------------------------------------------------------------
-	| Email Settings
-	|--------------------------------------------------------------------------
-	|
-	*/
 	'email' => [
-		'enable' => true,
-		'test'   => 'me@codyjassman.com',
+		'enabled'   => true,
+		'addresses' => [
+			'admin' => 'webmaster',
+			'test'  => 'webmaster',
+		],
 	],
 
 	/*

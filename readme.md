@@ -98,6 +98,12 @@ This will return the `title.main` config item along with the `name` config item 
 
 This will return the `title.heading` config item or the `title` config item if a heading title is not set. This can be used in cases where you want to make the heading of the page different from what is in the web page's `title` tag. You may also use `setSubHeading()` and `subHeading()` should you require a sub heading.
 
+**Setting the page title prefix:**
+
+	Site::setTitlePrefix('Forum'); // set a prefix only for the document title itself
+
+	Site::setTitlePrefix('Forum', true); // set a prefix for the document title as well as the page heading
+
 <a name="highlighting-menu-items"></a>
 ## Highlighting Menu Items Based on Section and Sub Section
 
@@ -106,28 +112,28 @@ SolidSite has a few methods for the purpose of highlighting menu items (adding a
 **Highlighting a menu item by section:**
 
 	<ul>
-		<li<?php echo Site::selectBy('section', 'Home'); ?>><a href="#">Home</a></li>
-		<li<?php echo Site::selectBy('section', 'FAQ'); ?>><a href="#">FAQ</a></li>
-		<li<?php echo Site::selectBy('section', 'Contact'); ?>><a href="#">Contact</a></li>
+		<li{!! Site::selectBy('section', 'Home') !!}><a href="#">Home</a></li>
+		<li{!! echo Site::selectBy('section', 'FAQ') !!}><a href="#">FAQ</a></li>
+		<li{!! echo Site::selectBy('section', 'Contact') !!}><a href="#">Contact</a></li>
 	</ul>
 
 **Highlighting a menu item by multiple identifiers:**
 
 	<ul>
-		<li<?php echo Site::selectBy('section', 'Home'); ?>><a href="#">Home</a></li>
-		<li<?php echo Site::selectBy('section', 'Stuff'); ?>>
+		<li{!! Site::selectBy('section', 'Home') !!}><a href="#">Home</a></li>
+		<li{!! Site::selectBy('section', 'Stuff') !!}>
 			<a href="#">Stuff</a>
 			<ul>
-				<li<?php echo Site::selectByMulti(array('section' => 'Stuff', 'subSection' => 'Some Stuff')); ?>>
+				<li{!! Site::selectByMulti(['section' => 'Stuff', 'subSection' => 'Some Stuff']) !!}>
 					<a href="#">Some Stuff</a>
 				</li>
-				<li class="some-class<?php echo Site::selectByMulti(array('section' => 'Stuff', 'subSection' => 'Some Other Stuff'), true); ?>">
+				<li class="some-class{!! Site::selectByMulti(['section' => 'Stuff', 'subSection' => 'Some Other Stuff'], true) !!}">
 					<a href="#">Some Other Stuff</a>
 				</li>
 			</ul>
 		</li>
-		<li<?php echo Site::selectBy('section', 'FAQ', false, 'active'); ?>><a href="#">FAQ</a></li>
-		<li class="some-class<?php echo Site::selectBy('section', 'Contact', true); ?>"><a href="#">Contact</a></li>
+		<li{!! Site::selectBy('section', 'FAQ', false, 'active') !!}><a href="#">FAQ</a></li>
+		<li class="some-class{!! Site::selectBy('section', 'Contact', true) !!}"><a href="#">Contact</a></li>
 	</ul>
 
 If successful, a class will be added to the menu list item. The default class is "selected", but this can be adjusted in the config file or as the fourth argument in the `selectBy()` and `selectByMulti()` methods. The third class is a boolean that denotes whether the returned markup should be the entire class declaration or if it should just return the name of the class (with a preceding space) in case you want to add the class to an existing class declaration in your HTML.
@@ -137,33 +143,31 @@ If successful, a class will be added to the menu list item. The default class is
 
 **Create an asset URL that uses the directory specified in `config.php`:**
 
-	echo Site::asset('js/jquery.js');
+	echo Site::asset('libraries/bootstrap/js/bootstrap.min.js');
 
 **Create an image asset URL:**
 
 	echo Site::img('logo.png');
 
+	echo Site::img('logo'); // if no extension is provided, ".png" is assumed
+
 **Create a CSS asset URL:**
 
 	echo Site::css('styles.css');
+
+	echo Site::css('styles'); // if no extension is provided, ".css" is assumed
 
 **Create a JavaScript asset URL:**
 
 	echo Site::js('jquery.js');
 
+	echo Site::js('jquery'); // if no extension is provided, ".js" is assumed
+
 **Create an uploaded file URL:**
 
-	echo Site::uploadedFile('user_images/1.png');
+	echo Site::uploadedFile('users/1.png');
 
 The asset URLs methods should help to shorten markup and make your views cleaner. You can customize the directories for each of the asset types in `config.php` according to your preferences.
-
-For `img()`, `css()`, and `js()`, you are not required to add an extension. For the image method, `.png` will be the assumed extension if you leave it out:
-
-	echo Site::img('logo');   //automatically adds ".png"
-
-	echo Site::css('styles'); //automatically adds ".css"
-
-	echo Site::js('jquery');  //automatically adds ".js"
 
 <a name="breadcrumb-trails"></a>
 ## Breadcrumb Trails
