@@ -137,12 +137,25 @@ return [
 	|
 	*/
 	'pagination' => [
-		'items_per_page'   => 25,
-		'page_link_radius' => 3,
-		'classes'          => [
+		'items_per_page' => 25,
+		'page_links'     => [
+			'radius'   => 2,
+			'bookends' => 2,
+			'href'     => [
+				'enabled' => true,
+				'get'     => true,
+			],
+		],
+		'classes' => [
 			'default'  => 'btn btn-sm btn-default',
 			'active'   => 'btn-primary',
 			'inactive' => null,
+			'disabled' => 'disabled',
+		],
+		'markup' => [
+			'previous'  => '&laquo;',
+			'next'      => '&raquo;',
+			'separator' => '...',
 		],
 	],
 

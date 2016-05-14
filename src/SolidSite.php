@@ -6,14 +6,15 @@
 		breadcrumb trails, pagination, and other components.
 
 		created by Cody Jassman
-		v0.7.0
-		last updated on May 3, 2016
+		v0.7.1
+		last updated on May 14, 2016
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Pagination\Paginator;
 
@@ -793,7 +794,7 @@ class SolidSite {
 		if (is_null($list))
 			$list = $this->buttonList;
 
-		return $this->buttons[$list];
+		return isset($this->buttons[$list]) ? $this->buttons[$list] : [];
 	}
 
 	/**
@@ -895,7 +896,13 @@ class SolidSite {
 
 		$itemsPerPage = isset($config['itemsPerPage']) ? $config['itemsPerPage'] : $this->get('pagination.itemsPerPage', 25);
 
-		if ($page != "last")
+		if (is_array($page) && empty($config))
+		{
+			$config = $page;
+			$page   = isset($config['page']) ? $config['page'] : null;
+		}
+
+		if (!in_array($page, ['first', 'last']))
 		{
 			if (is_null($page))
 				$page = Input::get('page');
@@ -908,13 +915,20 @@ class SolidSite {
 		{
 			$items = $rawQuery->paginate($itemsPerPage);
 
-			$page = $items->lastPage();
+			switch ($page)
+			{
+				case "first": $page = 1; break;
+				case "last":  $page = $items->lastPage(); break;
+			}
 		}
 
-		Paginator::currentPageResolver(function() use ($page)
+		if (!is_null($page))
 		{
-			return $page;
-		});
+			Paginator::currentPageResolver(function() use ($page)
+			{
+				return $page;
+			});
+		}
 
 		$items = $query->paginate($itemsPerPage);
 
@@ -940,21 +954,142 @@ class SolidSite {
 	}
 
 	/**
+	 * Set the pagination parameters for GET query links.
+	 *
+	 * @param  array    $parameters
+	 * @return void
+	 */
+	public function setPaginationParameters(array $parameters = [])
+	{
+		$this->set('pagination.parameters', $parameters);
+	}
+
+	/**
 	 * Create HTML for pagination.
 	 *
 	 * @param  mixed    $items
+	 * @param  mixed    $parameters
 	 * @return string
 	 */
-	public function getPaginationMarkup($items = null)
+	public function getPaginationMarkup($items = null, $parameters = null)
 	{
 		if (is_null($items))
 			$items = $this->get('pagination.items', []);
+
+		if (!is_null($parameters))
+		{
+			ksort($parameters);
+
+			$this->set('pagination.parameters', $parameters);
+		}
 
 		$html = view('solid-site::pagination', ['items' => $items])->render();
 
 		$this->set('pagination.uiAdded', true);
 
 		return $html;
+	}
+
+	/**
+	 * Get the class attribute for a page link.
+	 *
+	 * @param  mixed    $page
+	 * @param  mixed    $items
+	 * @return integer
+	 */
+	public function getPageNumber($page, $items = null)
+	{
+		if (is_null($items))
+			$items = $this->get('pagination.items', []);
+
+		switch ($page)
+		{
+			case "previous": $page = $items->currentPage() - 1; break;
+			case "next":     $page = $items->currentPage() + 1; break;
+			case "first":    $page = 1; break;
+			case "last":     $page = $items->lastPage(); break;
+		}
+
+		if ($page < 1)
+			$page = 1;
+
+		if ($page > $items->lastPage())
+			$page = $items->lastPage();
+
+		return (int) $page;
+	}
+
+	/**
+	 * Get the class attribute for a page link.
+	 *
+	 * @param  mixed    $page
+	 * @param  mixed    $items
+	 * @return mixed
+	 */
+	public function getPageLink($page, $items = null)
+	{
+		if (is_null($items))
+			$items = $this->get('pagination.items', []);
+
+		if (!$this->get('pagination.pageLinks.href.enabled'))
+			return null;
+
+		$page = $this->getPageNumber($page, $items);
+
+		if ($this->get('pagination.pageLinks.href.get'))
+		{
+			$parameters = $this->get('pagination.parameters');
+			$parameters['page'] = $page;
+
+			$url = $this->get('pagination.url');
+
+			return $url.(Str::contains($url, '?') ? '&' : '?').http_build_query($parameters, null, '&');
+		}
+		else
+		{
+			return $this->get('pagination.url').'/'.$page;
+		}
+	}
+
+	/**
+	 * Get the class attribute for a page link.
+	 *
+	 * @param  mixed    $page
+	 * @param  mixed    $items
+	 * @return string
+	 */
+	public function getPageLinkClass($page, $items = null)
+	{
+		if (is_null($items))
+			$items = $this->get('pagination.items', []);
+
+		$class   = $this->get('pagination.classes.default');
+		$classes = $this->get('pagination.classes');
+
+		if ($items->currentPage() == $page && !in_array($page, ['previous', 'next', 'separator']))
+		{
+			if (!is_null($class) && $class != "" && isset($classes['active']) && !is_null($classes['active']) && $classes['active'] != "")
+				$class .= " ";
+
+			$class .= $classes['active'];
+		}
+		else
+		{
+			if (!is_null($class) && $class != "" && isset($classes['inactive']) && !is_null($classes['inactive']) && $classes['inactive'] != "")
+				$class .= " ";
+
+			$class .= $classes['inactive'];
+		}
+
+		if ($page == "separator" || ($page == "previous" && $items->currentPage() == 1) || ($page == "next" && $items->currentPage() == $items->lastPage()))
+		{
+			if (!is_null($class) && $class != "" && isset($classes['disabled']) && !is_null($classes['disabled']) && $classes['disabled'] != "")
+				$class .= " ";
+
+			$class .= $classes['disabled'];
+		}
+
+		return $class;
 	}
 
 	/**

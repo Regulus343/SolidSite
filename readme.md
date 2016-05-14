@@ -3,8 +3,6 @@ SolidSite
 
 **A Laravel 5 composer package that assigns section names & titles to pages, simplifies creation of breadcrumb trails, pagination, and other components.**
 
-> **Note:** For Laravel 4, you may use <a href="https://github.com/Regulus343/SolidSite/tree/v0.5.2">version 0.5.2</a>.
-
 - [Installation](#installation)
 - [Setting Sections, Sub Sections, and Titles](#setting-identifiers)
 - [Highlighting Menu Items Based on Section and Sub Section](#highlighting-menu-items)
@@ -236,7 +234,7 @@ The first example will use the active button list. The second one specifies the 
 <a name="pagination"></a>
 ## Pagination
 
-SolidSite makes it easy to create URI segment-powered pagination rather than having to rely on GET query strings like `?page=2`. This can allow you to create pagination systems that feature very clean URLs.
+SolidSite makes it easy to create URI segment-powered pagination rather than having to rely on GET query strings like `?page=2` (while keeping the GET query option available for those who require it). This can allow you to create pagination systems that feature very clean URLs.
 
 **Setting up pagination:**
 
@@ -246,8 +244,10 @@ SolidSite makes it easy to create URI segment-powered pagination rather than hav
 
 	Site::paginate($query, $page, [
 		'uri'      => 'items', // you can pass a URI or URL for the pagination buttons
-		'function' => 'Actions.getItems', // you can also pass a function to be called when a button is clicked
+		'function' => 'Actions.getItems', // you can also pass a function to be called when a button is clicked (used in conjunction with the included JS)
 	]);
+
+To use the `$page` parameter to override GET query pagination, you should set the `site.pagination.page_links.href.get` config variable to `false`. Otherwise, you can leave `$page` as a `null` value so that the `page` GET value will be used instead. There are also other settings available in the config file, such as setting the link width of the bookends (the "1 2 ..." links that will appear at the beginning/end if the current page + the page link radius) is outside of the beginning and/or end of the available number of pages. The bookend and radius links also automatically have classes applied to them, which will allow you to adjust the bookend and radius lengths depending on the available screen width of the accessing device. This aids in producing responsive layouts. Also, the pagination markup itself is completely adjustable if you publish the views.
 
 > **Note:** The `SolidSite` JavaScript class can be used in conjunction with `paginate()` to set up AJAX-based paginated data requesting when buttons are clicked.
 

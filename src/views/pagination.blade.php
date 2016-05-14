@@ -5,3 +5,5 @@
 	@include('solid-site::pagination_pages')
 
 </ul>
+
+<div class="clear"></div>
