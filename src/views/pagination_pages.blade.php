@@ -54,7 +54,7 @@ $end   = $items->currentPage() + $linkRadius;
 	<?php
 	$bookendStart = $items->lastPage() - $linkBookends + 1;
 	if ($bookendStart <= $end)
-		$bookendStart = $end;
+		$bookendStart = $end + 1;
 	?>
 
 	@if ($bookendStart > $end + 1)
