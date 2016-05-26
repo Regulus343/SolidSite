@@ -3,7 +3,7 @@
 | SolidSite JS
 |------------------------------------------------------------------------------
 |
-| Last Updated: May 3, 2016
+| Last Updated: May 25, 2016
 |
 */
 
@@ -205,15 +205,20 @@ var SolidSite = {
 			$('#field-page').val(page);
 
 			$('.pagination li a').removeClass('btn-primary');
-			$('.pagination li a[data-page="'+page+'"]').addClass('btn-primary');
+			$('.pagination li a[data-page="'+page+'"]').not('.previous').not('.next').addClass('btn-primary');
 
 			var paginationArea = $(this).parents('.pagination');
 
 			var url = paginationArea.data('url');
 
+			var urlSuffix = paginationArea.data('url-suffix');
+
 			if (parseInt(page) > 1)
 			{
 				url += '/'+page;
+
+				if (urlSuffix != "")
+					url += '/'+urlSuffix;
 
 				var pageTrailItem     = $('.breadcrumb li.page');
 				var pageTrailItemText = SolidSite.pageLabel+' '+page;
@@ -232,6 +237,9 @@ var SolidSite = {
 			}
 			else
 			{
+				if (urlSuffix != "")
+					url += '/'+page+'/'+urlSuffix;
+
 				$('.breadcrumb li.page').remove();
 				$('.breadcrumb li:last-child').addClass('active');
 			}

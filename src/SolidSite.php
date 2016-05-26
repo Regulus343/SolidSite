@@ -6,8 +6,8 @@
 		breadcrumb trails, pagination, and other components.
 
 		created by Cody Jassman
-		v0.7.1
-		last updated on May 14, 2016
+		v0.7.2
+		last updated on May 25, 2016
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -969,9 +969,10 @@ class SolidSite {
 	 *
 	 * @param  mixed    $items
 	 * @param  mixed    $parameters
+	 * @param  boolean  $inner
 	 * @return string
 	 */
-	public function getPaginationMarkup($items = null, $parameters = null)
+	public function getPaginationMarkup($items = null, $parameters = null, $inner = false)
 	{
 		if (is_null($items))
 			$items = $this->get('pagination.items', []);
@@ -983,11 +984,23 @@ class SolidSite {
 			$this->set('pagination.parameters', $parameters);
 		}
 
-		$html = view('solid-site::pagination', ['items' => $items])->render();
+		$html = view('solid-site::pagination'.($inner ? '_pages' : ''), ['items' => $items])->render();
 
 		$this->set('pagination.uiAdded', true);
 
 		return $html;
+	}
+
+	/**
+	 * Create inner HTML for pagination.
+	 *
+	 * @param  mixed    $items
+	 * @param  mixed    $parameters
+	 * @return string
+	 */
+	public function getInnerPaginationMarkup($items = null, $parameters = null)
+	{
+		return $this->getPaginationMarkup($items, $parameters, true);
 	}
 
 	/**
@@ -1066,7 +1079,17 @@ class SolidSite {
 		$class   = $this->get('pagination.classes.default');
 		$classes = $this->get('pagination.classes');
 
-		if ($items->currentPage() == $page && !in_array($page, ['previous', 'next', 'separator']))
+		$special = in_array($page, ['previous', 'next', 'separator']);
+
+		if ($special)
+		{
+			if ($class != "")
+				$class .= " ";
+
+			$class .= $page;
+		}
+
+		if ($items->currentPage() == $page && !$special)
 		{
 			if (!is_null($class) && $class != "" && isset($classes['active']) && !is_null($classes['active']) && $classes['active'] != "")
 				$class .= " ";
