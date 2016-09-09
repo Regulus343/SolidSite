@@ -6,7 +6,7 @@
 		breadcrumb trails, pagination, and other components.
 
 		created by Cody Jassman
-		v0.7.3
+		v0.7.4
 		last updated on September 8, 2016
 ----------------------------------------------------------------------------------------------------------*/
 
@@ -466,10 +466,11 @@ class SolidSite {
 	 *
 	 * @param  string   $path
 	 * @param  mixed    $viewBoxDimensions
+	 * @param  boolean  $absolutePath
 	 * @param  mixed    $package
 	 * @return string
 	 */
-	public function svg($path = '', $viewBoxDimensions = null, $package = false)
+	public function svg($path = '', $viewBoxDimensions = null, $absolutePath = false, $package = false)
 	{
 		$id = null;
 		if (strpos($path, '#') !== false)
@@ -496,10 +497,18 @@ class SolidSite {
 		// use external source instead of inline to allow browser caching
 		if (!is_null($id) && !is_null($viewBoxDimensions))
 		{
-			if ($path == "")
-				$url = "";
-			else
-				$url = $this->rootUrl($path);
+			if ($path != "")
+			{
+				if ($absolutePath)
+				{
+					$path = $this->rootUrl($absolutePath);
+				}
+				else
+				{
+					if (substr($path, 0, 1) != "/")
+						$path = '/'.$path;
+				}
+			}
 
 			if (is_array($viewBoxDimensions))
 			{
@@ -516,7 +525,7 @@ class SolidSite {
 				$strViewBox = "0 0 ".$viewBoxDimensions." ".$viewBoxDimensions;
 			}
 
-			return '<svg viewBox="0 0 50 50"><use xlink:href="'.$url.'#'.$id.'"></use></svg>';
+			return '<svg viewBox="0 0 50 50"><use xlink:href="'.$path.'#'.$id.'"></use></svg>';
 		}
 
 		if (is_file($path))
