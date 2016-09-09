@@ -6,8 +6,8 @@
 		breadcrumb trails, pagination, and other components.
 
 		created by Cody Jassman
-		v0.7.2
-		last updated on May 25, 2016
+		v0.7.3
+		last updated on September 8, 2016
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -444,11 +444,10 @@ class SolidSite {
 	 *
 	 * @param  string   $path
 	 * @param  mixed    $package
-	 * @param  string   $addExtension
-	 * @param  mixed    $useSubdomain
+	 * @param  mixed    $useRoot
 	 * @return string
 	 */
-	public function js($path = '', $package = false, $addExtension = true, $useRoot = null)
+	public function js($path = '', $package = false, $useRoot = null)
 	{
 		// add .js extension if one doesn't exist
 		if ($path != "" && File::extension($path) != "js")
@@ -466,20 +465,59 @@ class SolidSite {
 	 * Get the contents of an SVG file.
 	 *
 	 * @param  string   $path
+	 * @param  mixed    $viewBoxDimensions
 	 * @param  mixed    $package
 	 * @return string
 	 */
-	public function svg($path = '', $package = false)
+	public function svg($path = '', $viewBoxDimensions = null, $package = false)
 	{
+		$id = null;
+		if (strpos($path, '#') !== false)
+		{
+			$pathArray = explode('#', $path);
+
+			$path = $pathArray[0];
+			$id   = $pathArray[1];
+		}
+
 		// if no extension is given, add .svg
-		if ($path != "" && File::extension($path) != "svg")
-			$path .= ".svg";
+		if (is_null($id) || $path != "")
+		{
+			if ($path != "" && File::extension($path) != "svg")
+				$path .= ".svg";
 
-		$svgPath = $this->get('paths.svg');
-		if ($svgPath != "" && $svgPath != false && !is_null($svgPath))
-			$path = $svgPath.'/'.$path;
+			$svgPath = $this->get('paths.svg');
+			if ($svgPath != "" && $svgPath != false && !is_null($svgPath))
+				$path = $svgPath.'/'.$path;
 
-		$path = $this->getDirectoryForPath($this->get('paths.images').'/'.$path, $package);
+			$path = $this->getDirectoryForPath($this->get('paths.images').'/'.$path, $package);
+		}
+
+		// use external source instead of inline to allow browser caching
+		if (!is_null($id) && !is_null($viewBoxDimensions))
+		{
+			if ($path == "")
+				$url = "";
+			else
+				$url = $this->rootUrl($path);
+
+			if (is_array($viewBoxDimensions))
+			{
+				switch (count($viewBox))
+				{
+					case 1: $strViewBox = "0 0 ".$viewBoxDimensions[0]." ".$viewBoxDimensions[0]; break;
+					case 2: $strViewBox = "0 0 ".$viewBoxDimensions[0]." ".$viewBoxDimensions[1]; break;
+					case 3: $strViewBox = "0 ".$viewBoxDimensions[0]." ".$viewBoxDimensions[1]." ".$viewBoxDimensions[2]; break;
+					case 4: $strViewBox = $viewBoxDimensions[0]." ".$viewBoxDimensions[1]." ".$viewBoxDimensions[2]." ".$viewBoxDimensions[3]; break;
+				}
+			}
+			else
+			{
+				$strViewBox = "0 0 ".$viewBoxDimensions." ".$viewBoxDimensions;
+			}
+
+			return '<svg viewBox="0 0 50 50"><use xlink:href="'.$url.'#'.$id.'"></use></svg>';
+		}
 
 		if (is_file($path))
 			return file_get_contents($path);
