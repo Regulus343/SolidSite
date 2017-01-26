@@ -6,8 +6,8 @@
 		breadcrumb trails, pagination, and other components.
 
 		created by Cody Jassman
-		v0.7.5
-		last updated on September 24, 2016
+		v0.7.6
+		last updated on January 25, 2017
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -1169,7 +1169,7 @@ class SolidSite {
 	 */
 	public function setDeveloper()
 	{
-		Session::set('developer', true);
+		Session::put('developer', true);
 	}
 
 	/**
