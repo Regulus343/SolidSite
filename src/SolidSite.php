@@ -6,8 +6,8 @@
 		breadcrumb trails, pagination, and other components.
 
 		created by Cody Jassman
-		v0.7.6
-		last updated on January 25, 2017
+		v0.7.7
+		last updated on February 8, 2017
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
