@@ -13,7 +13,7 @@ return [
 	| in config/app.php.
 	|
 	*/
-	'name'  => 'Website Name',
+	'name'  => env('APP_NAME', 'App'),
 	'email' => [
 		'enabled'   => true,
 		'test_mode' => false,
