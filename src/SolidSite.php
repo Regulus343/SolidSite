@@ -6,8 +6,8 @@
 		breadcrumb trails, pagination, and other components.
 
 		created by Cody Jassman
-		v0.7.7
-		last updated on February 8, 2017
+		v0.7.8
+		last updated on September 16, 2017
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -941,7 +941,25 @@ class SolidSite {
 	{
 		$rawQuery = $query;
 
-		$itemsPerPage = isset($config['itemsPerPage']) ? $config['itemsPerPage'] : $this->get('pagination.itemsPerPage', 25);
+		if (!isset($config['itemsPerPage']))
+		{
+			$config['itemsPerPage'] = $this->get('pagination.itemsPerPage', 25);
+		}
+
+		if (!isset($config['preventArray']))
+		{
+			$config['preventArray'] = $this->get('pagination.preventArray', false);
+		}
+
+		if (!isset($config['attributeSet']))
+		{
+			$config['attributeSet'] = $this->get('pagination.defaultAttributeSet', false);
+		}
+
+		if (!isset($config['camelizeArrayKeys']))
+		{
+			$config['camelizeArrayKeys'] = $this->get('pagination.camelizeArrayKeys', config('form.camelize_array_keys', false));
+		}
 
 		if (is_array($page) && empty($config))
 		{
@@ -960,7 +978,7 @@ class SolidSite {
 		}
 		else
 		{
-			$items = $rawQuery->paginate($itemsPerPage);
+			$items = $rawQuery->paginate($config['itemsPerPage']);
 
 			switch ($page)
 			{
@@ -977,7 +995,21 @@ class SolidSite {
 			});
 		}
 
-		$items = $query->paginate($itemsPerPage);
+		$paginated = $query->paginate($config['itemsPerPage']);
+
+		$items = $paginated->getCollection();
+
+		$attributeSetApplied = !is_null($config['attributeSet']) && $items->count();
+
+		if ($attributeSetApplied)
+		{
+			$model = get_class($items[0]);
+
+			if (method_exists($model, 'collectionToLimitedArray'))
+			{
+				$items = $model::collectionToLimitedArray($items, $config['attributeSet']);
+			}
+		}
 
 		if (isset($config['uri']) && !isset($config['url']))
 			$config['url'] = $this->url($config['uri']);
@@ -987,17 +1019,38 @@ class SolidSite {
 
 		foreach ($config as $item => $value)
 		{
-			$this->set('pagination.'.$item, $value);
+			if ($item != "preventArray")
+				$this->set('pagination.'.$item, $value);
 
 			if ($item == "url")
-				$items->setPath($value);
+				$paginated->setPath($value);
 		}
 
 		$this->set('pagination.page', $page);
-		$this->set('pagination.lastPage', $items->lastPage());
+		$this->set('pagination.lastPage', $paginated->lastPage());
 		$this->set('pagination.items', $items);
 
-		return $items;
+		if (!$config['preventArray'] && ($config['camelizeArrayKeys'] || $attributeSetApplied))
+		{
+			$paginated = $paginated->toArray();
+
+			if ($attributeSetApplied)
+			{
+				unset($paginated['data']);
+			}
+
+			if ($config['camelizeArrayKeys'] && class_exists('Regulus\TetraText\Facade'))
+			{
+				$paginated = \Regulus\TetraText\Facade::camelizeKeys($paginated);
+			}
+
+			if ($attributeSetApplied)
+			{
+				$paginated['data'] = $items;
+			}
+		}
+
+		return $paginated;
 	}
 
 	/**

@@ -13,7 +13,7 @@ return [
 	| in config/app.php.
 	|
 	*/
-	'name'  => 'Website Name',
+	'name'  => env('APP_NAME', 'App'),
 	'email' => [
 		'enabled'   => true,
 		'test_mode' => false,
@@ -22,6 +22,9 @@ return [
 			'test'  => 'webmaster',
 		],
 	],
+
+	'version'     => env('APP_VERSION', '0.0.1'),
+	'sub_version' => env('APP_SUB_VERSION', null),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -93,16 +96,6 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Use Root
-	|--------------------------------------------------------------------------
-	|
-	| Use root URL by default for assets, instead of the current subdomain.
-	|
-	*/
-	'use_root' => true,
-
-	/*
-	|--------------------------------------------------------------------------
 	| Selected Class
 	|--------------------------------------------------------------------------
 	|
@@ -147,8 +140,12 @@ return [
 	|
 	*/
 	'pagination' => [
-		'items_per_page' => 25,
-		'page_links'     => [
+		'items_per_page'        => 25,
+		'prevent_array'         => false,
+		'camelize_array_keys'   => false,
+		'default_attribute_set' => null,
+
+		'page_links' => [
 			'radius'   => 2,
 			'bookends' => 2,
 			'href'     => [
@@ -156,12 +153,14 @@ return [
 				'get'     => true,
 			],
 		],
+
 		'classes' => [
 			'default'  => 'btn btn-sm btn-default',
 			'active'   => 'btn-primary',
 			'inactive' => null,
 			'disabled' => 'disabled',
 		],
+
 		'markup' => [
 			'previous'  => '&laquo;',
 			'next'      => '&raquo;',
