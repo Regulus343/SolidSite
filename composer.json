@@ -13,7 +13,9 @@
 		"laravel/framework": "5.*"
 	},
 	"suggest": {
-		"regulus/elemental": "0.5.*"
+		"regulus/elemental": "0.5.*",
+		"regulus/formation": "1.3.*",
+		"regulus/tetra-text": "0.6.*"
 	},
 	"autoload": {
 		"files": [
