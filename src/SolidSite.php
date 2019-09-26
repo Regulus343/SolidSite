@@ -6,8 +6,8 @@
 		breadcrumb trails, pagination, and other components.
 
 		created by Cody Jassman
-		v0.7.8
-		last updated on September 16, 2017
+		v0.8.0
+		last updated on September 26, 2019
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -44,7 +44,7 @@ class SolidSite {
 	 */
 	public function get($item, $default = null)
 	{
-		return Config::get('site.'.snake_case($item), $default);
+		return Config::get('site.'.Str::snake($item), $default);
 	}
 
 	/**
@@ -65,20 +65,20 @@ class SolidSite {
 			{
 				foreach ($items as $item => $value)
 				{
-					Config::set('site.'.snake_case($item), $value);
+					Config::set('site.'.Str::snake($item), $value);
 				}
 			}
 			else
 			{
 				foreach ($items as $item)
 				{
-					Config::set('site.'.snake_case($item), $value);
+					Config::set('site.'.Str::snake($item), $value);
 				}
 			}
 		}
 		else
 		{
-			Config::set('site.'.snake_case($item), $value);
+			Config::set('site.'.Str::snake($item), $value);
 		}
 
 		return $value;
