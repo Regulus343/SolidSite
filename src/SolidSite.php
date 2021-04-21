@@ -6,8 +6,8 @@
 		breadcrumb trails, pagination, and other components.
 
 		created by Cody Jassman
-		v0.8.0
-		last updated on September 26, 2019
+		v0.8.1
+		last updated on April 20, 2021
 ----------------------------------------------------------------------------------------------------------*/
 
 use Illuminate\Support\Facades\Config;
@@ -525,7 +525,7 @@ class SolidSite {
 				$strViewBox = "0 0 ".$viewBoxDimensions." ".$viewBoxDimensions;
 			}
 
-			return '<svg viewBox="0 0 50 50"><use xlink:href="'.$path.'#'.$id.'"></use></svg>';
+			return '<svg viewBox="'.$strViewBox.'"><use xlink:href="'.$path.'#'.$id.'"></use></svg>';
 		}
 
 		if (is_file($path))
