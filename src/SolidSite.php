@@ -512,7 +512,7 @@ class SolidSite {
 
 			if (is_array($viewBoxDimensions))
 			{
-				switch (count($viewBox))
+				switch (count($viewBoxDimensions))
 				{
 					case 1: $strViewBox = "0 0 ".$viewBoxDimensions[0]." ".$viewBoxDimensions[0]; break;
 					case 2: $strViewBox = "0 0 ".$viewBoxDimensions[0]." ".$viewBoxDimensions[1]; break;
